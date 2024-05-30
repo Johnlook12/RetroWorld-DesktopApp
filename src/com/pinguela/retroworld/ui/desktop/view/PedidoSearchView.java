@@ -143,7 +143,7 @@ public class PedidoSearchView extends SearchView {
 	}
 
 	@Override
-	protected void addButtonsColumn() {
+	public void addButtonsColumn() {
 		ButtonColumn abiertoDetailButton = new ButtonColumn(getTableResults(), new OpenPedidoAbiertoDetailAction(this), 5, 
 				new ImageIcon(RetroWorldWindow.class.getResource("/nuvola/16x16/1431_editors_editors_package_package.png")));
 		ButtonColumn completarButton = new ButtonColumn(getTableResults(), new CompletarPedidoAction(this), 6, 

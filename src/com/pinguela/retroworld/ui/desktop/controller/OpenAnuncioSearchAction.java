@@ -7,14 +7,18 @@ import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.table.TableModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.retroworld.model.AbstractCriteria;
+import com.pinguela.retroworld.model.Anuncio;
 import com.pinguela.retroworld.model.Genero;
 import com.pinguela.retroworld.model.Idioma;
 import com.pinguela.retroworld.model.Plataforma;
+import com.pinguela.retroworld.model.Results;
 import com.pinguela.retroworld.service.AnuncioService;
 import com.pinguela.retroworld.service.GeneroService;
 import com.pinguela.retroworld.service.IdiomaService;
@@ -63,6 +67,14 @@ public class OpenAnuncioSearchAction
 			DefaultComboBoxModel<Idioma> idiomaComboModel = new DefaultComboBoxModel<Idioma>(idiomas.toArray(new Idioma[idiomas.size()]));
 			
 			view.setModel(generoComboModel, idiomaComboModel, plataformaComboModel);
+			view.setStart(new AnuncioPagedSearchAction(PagedSearchAction.START, view,"",
+					new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-arrow-left-22.png"))));
+			view.setNext(new AnuncioPagedSearchAction(PagedSearchAction.NEXT, view, "", 
+					new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-arrow-22.png"))));
+			view.setPrevious(new AnuncioPagedSearchAction(PagedSearchAction.PREVIOUS, view, "", 
+					new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-arrow-pointing-left-22.png"))));
+			view.setEnd(new AnuncioPagedSearchAction(PagedSearchAction.END, view, "", 
+					new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-arrow-right-22.png"))));
 			
 			RetroWorldWindow.getInstance().addClosableView(
 					"Buscar anuncio", 

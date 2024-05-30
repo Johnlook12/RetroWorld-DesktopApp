@@ -13,16 +13,15 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
-import javax.swing.table.TableModel;
 
 import com.pinguela.retroworld.model.Anuncio;
 import com.pinguela.retroworld.service.AnuncioCriteria;
 import com.pinguela.retroworld.ui.desktop.RetroWorldWindow;
+import com.pinguela.retroworld.ui.desktop.controller.AnuncioPagedSearchAction;
 import com.pinguela.retroworld.ui.desktop.controller.AprobarAnuncioAction;
 import com.pinguela.retroworld.ui.desktop.controller.OpenAnuncioDetailAction;
-import com.pinguela.retroworld.ui.desktop.controller.PaginacionInicialAction;
+import com.pinguela.retroworld.ui.desktop.controller.PagedSearchAction;
 import com.pinguela.retroworld.ui.desktop.controller.RechazarAnuncioAction;
-import com.pinguela.retroworld.ui.desktop.model.ModerarAnunciosTableModel;
 import com.pinguela.retroworld.ui.desktop.renderer.AnuncioTableCellRenderer;
 import com.pinguela.retroworld.ui.desktop.renderer.ButtonColumn;
 import com.toedter.calendar.JDateChooser;
@@ -80,7 +79,7 @@ public class ModerarAnunciosView extends PaginatedSearchView {
 		getSearchFieldPanel().add(tituloLbl, gbc_tituloLbl);
 		
 		tituloTextField = new JTextField();
-		tituloTextField.addKeyListener(new PaginacionInicialAction(this));
+		tituloTextField.addKeyListener(new AnuncioPagedSearchAction(PagedSearchAction.START, this));
 		tituloTextField.setColumns(10);
 		GridBagConstraints gbc_tituloTextField = new GridBagConstraints();
 		gbc_tituloTextField.fill = GridBagConstraints.HORIZONTAL;
@@ -132,7 +131,7 @@ public class ModerarAnunciosView extends PaginatedSearchView {
 	}
 	
 	private void postInitialize() {
-		new PaginacionInicialAction(this).actionPerformed(null);
+		new AnuncioPagedSearchAction(PagedSearchAction.START, this);
 		getTableResults().setDefaultRenderer(Object.class, new AnuncioTableCellRenderer());
 		SpinnerNumberModel model = new SpinnerNumberModel(0,0, Integer.MAX_VALUE, 1);
 		idAnuncioSpinner.setModel(model);
@@ -154,7 +153,7 @@ public class ModerarAnunciosView extends PaginatedSearchView {
 
 
 	@Override
-	protected void addButtonsColumn() {
+	public void addButtonsColumn() {
 		ButtonColumn detailButton = new ButtonColumn(getTableResults(), new OpenAnuncioDetailAction(this), 4, 
 				new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-eye-24.png")));
 		ButtonColumn aprobarButton = new ButtonColumn(getTableResults(), new AprobarAnuncioAction(this), 5, 

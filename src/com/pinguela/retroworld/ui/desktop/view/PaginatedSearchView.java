@@ -1,25 +1,15 @@
 package com.pinguela.retroworld.ui.desktop.view;
 import java.awt.BorderLayout;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.table.TableModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.model.AbstractCriteria;
 import com.pinguela.retroworld.model.Results;
-import com.pinguela.retroworld.ui.desktop.RetroWorldWindow;
-import com.pinguela.retroworld.ui.desktop.controller.PaginacionAnteriorAction;
-import com.pinguela.retroworld.ui.desktop.controller.PaginacionFinalAction;
-import com.pinguela.retroworld.ui.desktop.controller.PaginacionInicialAction;
-import com.pinguela.retroworld.ui.desktop.controller.PaginacionSiguienteAction;
-import com.pinguela.retroworld.ui.desktop.controller.ShowDetailAction;
-import com.pinguela.retroworld.ui.desktop.renderer.ButtonColumn;
+import com.pinguela.retroworld.ui.desktop.controller.PagedSearchAction;
 
 public abstract class PaginatedSearchView<E> extends SearchView{
 	private static Logger logger = LogManager.getLogger(PaginatedSearchView.class);
@@ -41,38 +31,43 @@ public abstract class PaginatedSearchView<E> extends SearchView{
 		initialize();
 	}
 	
+	public PaginatedSearchView(PagedSearchAction<E> start, PagedSearchAction<E> previous, PagedSearchAction<E> next, PagedSearchAction<E> end) {
+		this();
+		
+		setStart(start);
+		setPrevious(previous);
+		setNext(next);
+		setEnd(end);
+		
+		initialize();
+	}
+	
 	private void initialize() {
 		paginationPanel = new JPanel();
 		add(paginationPanel, BorderLayout.SOUTH);
 		
-		inicioBtn = new JButton("Inicio");
-		inicioBtn.setAction(new PaginacionInicialAction(this, "",new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-arrow-left-22.png"))));
+		inicioBtn = new JButton();
 		inicioBtn.setEnabled(false);
 		paginationPanel.add(inicioBtn);
 		
-		anteriorBtn = new JButton("Anterior");
-		anteriorBtn.setAction(new PaginacionAnteriorAction(this,"",new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-arrow-pointing-left-22.png"))));
+		anteriorBtn = new JButton();
 		anteriorBtn.setEnabled(false);
 		paginationPanel.add(anteriorBtn);
 		
 		paginationLbl = new JLabel("-");
 		paginationPanel.add(paginationLbl);
 		
-		siguienteBtn = new JButton("siguiente");
-		siguienteBtn.setAction(new PaginacionSiguienteAction(this,"",new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-arrow-22.png"))));
+		siguienteBtn = new JButton();
 		siguienteBtn.setEnabled(false);
 		paginationPanel.add(siguienteBtn);
 		
-		finalBtn = new JButton("final");
-		finalBtn.setAction(new PaginacionFinalAction(this, "", new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-arrow-right-22.png"))));
+		finalBtn = new JButton();	
 		finalBtn.setEnabled(false);
 		paginationPanel.add(finalBtn);
 		
 	}
 	
 	public void updateView() {
-		setTableModel(getTableModel());
-		addButtonsColumn();
 		
 		paginationLbl.setText(currentPosition+" - "+results.getTotal());
 		
@@ -96,5 +91,21 @@ public abstract class PaginatedSearchView<E> extends SearchView{
 	
 	public void setResults(Results<E> results) {
 		this.results = results;
+	}
+
+	public void setStart(PagedSearchAction<E> start) {
+		this.inicioBtn.setAction(start);;
+	}
+
+	public void setPrevious(PagedSearchAction<E> previous) {
+		this.anteriorBtn.setAction(previous);
+	}
+
+	public void setNext(PagedSearchAction<E> next) {
+		this.siguienteBtn.setAction(next);
+	}
+
+	public void setEnd(PagedSearchAction<E> end) {
+		this.finalBtn.setAction(end);
 	}
 }

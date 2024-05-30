@@ -64,6 +64,15 @@ public class OpenVideojuegoSearchAction extends AbstractAction{
 			DefaultComboBoxModel<Plataforma> plataformaModel = new DefaultComboBoxModel<Plataforma>(plataformas.toArray(new Plataforma[plataformas.size()]));
 			DefaultComboBoxModel<Desarrolladora> desarrolladoraModel = new DefaultComboBoxModel<Desarrolladora>(desarrolladoras.toArray(new Desarrolladora[desarrolladoras.size()]));
 			view.setModel(idiomaModel, plataformaModel, generoModel,desarrolladoraModel);
+			view.setStart(new VideojuegoPagedSearchAction(PagedSearchAction.START, view, "", 
+					new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-arrow-left-22.png"))));
+			view.setNext(new VideojuegoPagedSearchAction(PagedSearchAction.NEXT, view, "", 
+					new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-arrow-22.png"))));
+			view.setPrevious(new VideojuegoPagedSearchAction(PagedSearchAction.PREVIOUS, view, "", 
+					new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-arrow-pointing-left-22.png"))));
+			view.setEnd(new VideojuegoPagedSearchAction(PagedSearchAction.END, view, "", 
+					new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-arrow-right-22.png"))));
+			
 			RetroWorldWindow.getInstance().addClosableView("Buscar videojuego", 
 					new ImageIcon(RetroWorldWindow.class.getResource("/nuvola/32x32/1467_xmag_xmag.png")),
 					view);			

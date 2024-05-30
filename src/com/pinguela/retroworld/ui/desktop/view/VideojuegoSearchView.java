@@ -10,9 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.TableModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,8 +24,8 @@ import com.pinguela.retroworld.model.Videojuego;
 import com.pinguela.retroworld.service.VideojuegoCriteria;
 import com.pinguela.retroworld.ui.desktop.RetroWorldWindow;
 import com.pinguela.retroworld.ui.desktop.controller.OpenVideojuegoDetailAction;
-import com.pinguela.retroworld.ui.desktop.controller.PaginacionInicialAction;
-import com.pinguela.retroworld.ui.desktop.model.VideojuegoTableModel;
+import com.pinguela.retroworld.ui.desktop.controller.PagedSearchAction;
+import com.pinguela.retroworld.ui.desktop.controller.VideojuegoPagedSearchAction;
 import com.pinguela.retroworld.ui.desktop.renderer.ButtonColumn;
 import com.pinguela.retroworld.ui.desktop.renderer.DesarrolladoraListCellRenderer;
 import com.pinguela.retroworld.ui.desktop.renderer.GeneroListCellRenderer;
@@ -198,9 +196,9 @@ public class VideojuegoSearchView extends PaginatedSearchView<Videojuego> {
 		gbc_desarrolladoraComboBox.gridx = 6;
 		gbc_desarrolladoraComboBox.gridy = 7;
 		getSearchFieldPanel().add(desarrolladoraComboBox, gbc_desarrolladoraComboBox);
-		
 		JButton buscarVideojuegoButton = new JButton("");
-		buscarVideojuegoButton.setAction(new PaginacionInicialAction(this, "", new ImageIcon(RetroWorldWindow.class.getResource("/nuvola/32x32/1467_xmag_xmag.png"))));
+		buscarVideojuegoButton.setAction(new VideojuegoPagedSearchAction(PagedSearchAction.START, this, "",
+				new ImageIcon(RetroWorldWindow.class.getResource("/nuvola/32x32/1467_xmag_xmag.png"))));
 		GridBagConstraints gbc_buscarVideojuegoButton = new GridBagConstraints();
 		gbc_buscarVideojuegoButton.insets = new Insets(0, 0, 0, 5);
 		gbc_buscarVideojuegoButton.gridx = 14;
@@ -242,7 +240,7 @@ public class VideojuegoSearchView extends PaginatedSearchView<Videojuego> {
 	}
 
 	@Override
-	protected void addButtonsColumn() {
+	public void addButtonsColumn() {
 		ButtonColumn detailButton = new ButtonColumn(getTableResults(), new OpenVideojuegoDetailAction(this), 4, new ImageIcon(RetroWorldWindow.class.getResource("/nuvola/16x16/1431_editors_editors_package_package.png")));
 	}
 }

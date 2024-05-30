@@ -1,101 +1,118 @@
 package com.pinguela.retroworld.ui.desktop.controller;
 
 import javax.swing.Icon;
+import javax.swing.JOptionPane;
+import javax.swing.table.TableModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.pinguela.PinguelaException;
+import com.pinguela.retroworld.dao.DataException;
 import com.pinguela.retroworld.model.AbstractCriteria;
-import com.pinguela.retroworld.model.Anuncio;
 import com.pinguela.retroworld.model.Results;
-import com.pinguela.retroworld.model.Videojuego;
-import com.pinguela.retroworld.service.AnuncioCriteria;
-import com.pinguela.retroworld.service.AnuncioService;
-import com.pinguela.retroworld.service.VideojuegoCriteria;
-import com.pinguela.retroworld.service.VideojuegoService;
-import com.pinguela.retroworld.service.impl.AnuncioServiceImpl;
-import com.pinguela.retroworld.service.impl.VideojuegoServiceImpl;
-import com.pinguela.retroworld.ui.desktop.model.AnuncioTableModel;
-import com.pinguela.retroworld.ui.desktop.model.VideojuegoTableModel;
 import com.pinguela.retroworld.ui.desktop.view.PaginatedSearchView;
 
-public abstract class PagedSearchAction
-		extends BaseAction {
+public abstract class PagedSearchAction<T> extends BaseAction{
+	
+	public static final int START = 1;
+	public static final int PREVIOUS = 5;
+	public static final int NEXT = 10;
+	public static final int END = 15;
+
 	
 	private static Logger logger = LogManager.getLogger(PagedSearchAction.class); 
-	
+
 	private PaginatedSearchView view = null;
-	private AnuncioService anuncioService = null;
-	private VideojuegoService videojuegoService = null;
-	
-	public PagedSearchAction(PaginatedSearchView view) {
-		setView(view);
-		initServices();
+
+	private int action = START;
+
+
+
+	public PagedSearchAction(int action, PaginatedSearchView view) {
+		this(action, view, null, null);
 	}
 
-	public PagedSearchAction(PaginatedSearchView view, String name) {
-		super(name);
-		setView(view);
-		initServices();
+	public PagedSearchAction(int action, PaginatedSearchView view, String name) {
+		this(action, view, name, null);
 	}
-	
-	public PagedSearchAction(PaginatedSearchView view, String name, Icon icon) {
+
+	public PagedSearchAction(int action, PaginatedSearchView view, String name, Icon icon) {
 		super(name, icon);
+		setAction(action);
 		setView(view);
-		initServices();
 	}
-	
-	private void initServices() {
-		this.anuncioService = new AnuncioServiceImpl();
-		this.videojuegoService = new VideojuegoServiceImpl();
-	}
-	
+
+
 	/**
 	 * Template method.
-	 * Common behaviour.
+	 * Common paging behaviour.
 	 */
 	public void doAction() {
-		try {						
+		try {		
+
 			AbstractCriteria criteria = view.getCriteria();
-			int currentPosition;
-			currentPosition = getCurrentPosition();
-			if(criteria instanceof AnuncioCriteria) {
-				AnuncioCriteria anuncioCriteria = (AnuncioCriteria)criteria;
-				Results<Anuncio> results = anuncioService.findBy(anuncioCriteria, 
-						currentPosition, 
-						PaginatedSearchView.PAGE_SIZE);
-				view.setResults(results);
-				AnuncioTableModel model = new AnuncioTableModel(results.getPage());
-				view.setTableModel(model);
-			} else if(criteria instanceof VideojuegoCriteria) {
-				VideojuegoCriteria videojuegoCriteria = (VideojuegoCriteria)criteria;
-				Results<Videojuego> results = videojuegoService.findBy(videojuegoCriteria, 
-						currentPosition, 
-						PaginatedSearchView.PAGE_SIZE);
-				view.setResults(results);
-				VideojuegoTableModel model = new VideojuegoTableModel(results.getPage());
-				view.setTableModel(model);
-			}
-			view.setCurrentPosition(currentPosition);
-			// Validar datos
-			// ...			
-			view.updateView();
+			Results<T> results = doSearch(criteria);
+
+			logger.info("Found "+results.getTotal()+" for: "+criteria);
+			view.setResults(results);
+			view.setTableModel(getResultsTableModel());
 			
-		} catch(Exception ex) {
-			logger.error(ex.getMessage(), ex);
+			view.setCurrentPosition(getCurrentPosition());
+
+			view.updateView();
+			view.addButtonsColumn();
+		} catch(DataException de) {
+			logger.error(de.getMessage(), de);
+			JOptionPane.showMessageDialog(view,"Se ha producido un error: "+de.getMessage(),"Error en la búsqueda", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
 	protected PaginatedSearchView getView() {
 		return this.view;
 	}
-	
+
 	protected void setView(PaginatedSearchView view) {
 		this.view = view;
 	}
-	
-	/**
-	 * Concrete behaviour.
-	 */
-	public abstract int getCurrentPosition();
+
+	protected int getAction() {
+		return action;
+	}
+
+	protected void setAction(int action) {
+		this.action = action;
+	}
+
+
+	public int getCurrentPosition() {
+		int position = 1;
+		switch (action) {
+		case START:
+			position = 1;
+			break;
+		case PREVIOUS:
+			if (view.getCurrentPosition()>PaginatedSearchView.PAGE_SIZE) {
+				position = view.getCurrentPosition()-PaginatedSearchView.PAGE_SIZE;
+			} else {
+				position = 1;
+			}
+			break;
+		case NEXT:
+			position = view.getCurrentPosition()+PaginatedSearchView.PAGE_SIZE;
+			break;
+		case END:
+			int total = view.getResults().getTotal();
+			int sobrante = total%PaginatedSearchView.PAGE_SIZE;
+			position =  total-sobrante+1;	
+			break;
+		}
+		System.out.println("currentPosticion = "+position);
+		return position;
+	}
+
+
+	public abstract Results<T> doSearch(AbstractCriteria criteria) throws DataException;
+
+	public abstract TableModel getResultsTableModel();
 }

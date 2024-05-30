@@ -23,11 +23,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.TableModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,10 +37,10 @@ import com.pinguela.retroworld.model.Idioma;
 import com.pinguela.retroworld.model.Plataforma;
 import com.pinguela.retroworld.service.AnuncioCriteria;
 import com.pinguela.retroworld.ui.desktop.RetroWorldWindow;
+import com.pinguela.retroworld.ui.desktop.controller.AnuncioPagedSearchAction;
 import com.pinguela.retroworld.ui.desktop.controller.OpenAnuncioDetailAction;
-import com.pinguela.retroworld.ui.desktop.controller.PaginacionInicialAction;
+import com.pinguela.retroworld.ui.desktop.controller.PagedSearchAction;
 import com.pinguela.retroworld.ui.desktop.controller.SoftDeleteAnuncioAction;
-import com.pinguela.retroworld.ui.desktop.model.AnuncioTableModel;
 import com.pinguela.retroworld.ui.desktop.renderer.AnuncioTableCellRenderer;
 import com.pinguela.retroworld.ui.desktop.renderer.ButtonColumn;
 import com.pinguela.retroworld.ui.desktop.renderer.GeneroListCellRenderer;
@@ -188,7 +186,7 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(tituloTextField.getText().length()>=3) {
-					new PaginacionInicialAction(view).actionPerformed(null);
+					new AnuncioPagedSearchAction(PagedSearchAction.START, view);
 				}
 			}
 		});
@@ -242,7 +240,7 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 		precioDesdeSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				precioDesdeSliderLbl.setText(String.valueOf(precioDesdeSlider.getValue()));
-				new PaginacionInicialAction(view).actionPerformed(null);
+				new AnuncioPagedSearchAction(PagedSearchAction.START, view);
 			}
 		});
 		GridBagConstraints gbc_precioDesdeSlider = new GridBagConstraints();
@@ -267,7 +265,7 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 		precioHastaSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				precioHastaSliderLbl.setText(String.valueOf(precioHastaSlider.getValue()));
-				new PaginacionInicialAction(view).actionPerformed(null);
+				new AnuncioPagedSearchAction(PagedSearchAction.START, view);
 			}
 		});
 		GridBagConstraints gbc_precioHastaSlider = new GridBagConstraints();
@@ -422,7 +420,7 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 		estadoFinalizadoRadioBtn.setActionCommand("2");
 		
 		JButton buscarAnuncioButton = new JButton();
-		buscarAnuncioButton.setAction(new PaginacionInicialAction(this, "Buscar"));
+		buscarAnuncioButton.setAction(new AnuncioPagedSearchAction(PagedSearchAction.START, view,"Buscar"));
 		GridBagConstraints gbc_buscarAnuncioButton = new GridBagConstraints();
 		gbc_buscarAnuncioButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_buscarAnuncioButton.gridwidth = 2;
@@ -488,7 +486,7 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 	}
 
 	@Override
-	protected void addButtonsColumn() {
+	public void addButtonsColumn() {
 		ButtonColumn detailButton = new ButtonColumn(getTableResults(), new OpenAnuncioDetailAction(this), 4, 
 				new ImageIcon(RetroWorldWindow.class.getResource("/nuvola/16x16/1431_editors_editors_package_package.png")));
 		ButtonColumn deleteColumn = new ButtonColumn(getTableResults(), new SoftDeleteAnuncioAction(this), 5,

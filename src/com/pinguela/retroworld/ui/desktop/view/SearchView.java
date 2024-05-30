@@ -55,5 +55,5 @@ public abstract class SearchView extends View{
 	
 	public abstract AbstractCriteria getCriteria();
 	
-	protected abstract void addButtonsColumn();
+	public abstract void addButtonsColumn();
 }

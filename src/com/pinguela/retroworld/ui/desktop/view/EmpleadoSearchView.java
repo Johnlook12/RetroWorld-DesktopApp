@@ -140,7 +140,7 @@ public class EmpleadoSearchView extends SearchView {
 	}
 
 	@Override
-	protected void addButtonsColumn() {
+	public void addButtonsColumn() {
 		ButtonColumn deleteButton = new ButtonColumn(getTableResults(), new SoftDeleteEmpleadoAction(this), 5, 
 				new ImageIcon(RetroWorldWindow.class.getResource("/nuvola/16x16/1815_no_no.png")));
 	}
