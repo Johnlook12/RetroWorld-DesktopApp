@@ -365,6 +365,14 @@ public class CreateEmpleadoDialog extends RWDialog {
 
 
 		JButton cancelButton = new JButton("Cancelar");
+		cancelButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				firePropertyChange(CLOSE_DIALOG_PROPERTY, null, null);
+				
+			}
+		});
 		cancelButton.setActionCommand("Cancel");
 		buttonPane.add(cancelButton);
 		

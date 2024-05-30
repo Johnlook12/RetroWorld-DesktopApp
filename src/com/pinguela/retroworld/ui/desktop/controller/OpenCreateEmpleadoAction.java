@@ -1,12 +1,13 @@
 package com.pinguela.retroworld.ui.desktop.controller;
 
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 
 import com.pinguela.retroworld.ui.desktop.dialog.CreateEmpleadoDialog;
-import com.pinguela.retroworld.ui.desktop.view.EmpleadoSearchView;
 
 public class OpenCreateEmpleadoAction extends AbstractAction{
 	
@@ -25,6 +26,14 @@ public class OpenCreateEmpleadoAction extends AbstractAction{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		CreateEmpleadoDialog dialog = new CreateEmpleadoDialog();
+		dialog.addPropertyChangeListener(new PropertyChangeListener() {	
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if(evt.getPropertyName().equalsIgnoreCase(CreateEmpleadoDialog.CLOSE_DIALOG_PROPERTY)) {
+					dialog.dispose();
+				}
+			}
+		});
 		dialog.setVisible(true);
 	}
 

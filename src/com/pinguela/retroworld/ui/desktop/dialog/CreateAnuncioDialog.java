@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -197,6 +199,14 @@ public class CreateAnuncioDialog extends RWDialog {
 
 
 		JButton cancelarButton = new JButton("Cancelar");
+		cancelarButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				firePropertyChange(CLOSE_DIALOG_PROPERTY, null, null);
+				
+			}
+		});
 		cancelarButton.setActionCommand("Cancel");
 		buttonPane.add(cancelarButton);
 

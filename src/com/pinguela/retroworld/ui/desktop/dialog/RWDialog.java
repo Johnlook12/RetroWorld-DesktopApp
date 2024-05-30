@@ -12,8 +12,8 @@ import javax.swing.border.EmptyBorder;
 import com.pinguela.retroworld.ui.desktop.view.AnuncioDetailView;
 
 public class RWDialog extends JDialog {
-
-	private static final long serialVersionUID = 1L;
+	
+	public static final String CLOSE_DIALOG_PROPERTY = "closeDialog";
 	private final JPanel contentPanel = new JPanel();
 
 	/**

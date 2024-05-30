@@ -1,6 +1,8 @@
 package com.pinguela.retroworld.ui.desktop.controller;
 
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -38,6 +40,14 @@ public class OpenCreateVideojuegoAction extends BaseAction{
 	public void doAction() {
 		try {
 			CreateVideojuegoDialog dialog = new CreateVideojuegoDialog();
+			dialog.addPropertyChangeListener(new PropertyChangeListener() {
+				@Override
+				public void propertyChange(PropertyChangeEvent evt) {
+					if(evt.getPropertyName().equalsIgnoreCase(CreateVideojuegoDialog.CLOSE_DIALOG_PROPERTY)) {
+						dialog.dispose();
+					}
+				}
+			});
 			List<Desarrolladora> desarrolladoras = desarrolladoraService.findByAll();
 			dialog.setDesarrolladoras(desarrolladoras);
 			dialog.setModel();

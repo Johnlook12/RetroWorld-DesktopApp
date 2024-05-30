@@ -1,5 +1,7 @@
 package com.pinguela.retroworld.ui.desktop.controller;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -43,6 +45,14 @@ public class OpenCreateAnuncioAction extends BaseAction{
 	public void doAction() {
 		try {
 			CreateAnuncioDialog dialog = new CreateAnuncioDialog();
+			dialog.addPropertyChangeListener(new PropertyChangeListener() {	
+				@Override
+				public void propertyChange(PropertyChangeEvent evt) {
+					if(evt.getPropertyName().equalsIgnoreCase(CreateAnuncioDialog.CLOSE_DIALOG_PROPERTY)) {
+						dialog.dispose();						
+					}
+				}
+			});
 			VideojuegoCriteria criteria = new VideojuegoCriteria();
 			Results<Videojuego>videojuegos = videojuegoService.findBy(criteria, 1, Integer.MAX_VALUE);
 			List<EstadoVideojuego>estados = estadoVideojuegoService.findByAll();
