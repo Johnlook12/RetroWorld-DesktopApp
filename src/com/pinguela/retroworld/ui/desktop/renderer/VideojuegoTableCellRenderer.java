@@ -29,7 +29,7 @@ public class VideojuegoTableCellRenderer extends DefaultTableCellRenderer{
 		} else if(column==2) {
 			setText(videojuego.getFechaLanzamiento().toString());
 		} else if(column==3) {
-			setText(String.valueOf(videojuego.getIdDesarrolladora()));
+			setText(videojuego.getNombreDesarrolladora());
 		}
 		return c;
 	}

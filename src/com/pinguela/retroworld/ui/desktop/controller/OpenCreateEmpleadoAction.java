@@ -34,6 +34,7 @@ public class OpenCreateEmpleadoAction extends AbstractAction{
 				}
 			}
 		});
+		dialog.setModal(true);
 		dialog.setVisible(true);
 	}
 

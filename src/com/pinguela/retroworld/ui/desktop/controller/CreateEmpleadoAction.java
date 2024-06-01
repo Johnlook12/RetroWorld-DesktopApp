@@ -8,10 +8,10 @@ import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
+import com.pinguela.ServiceException;
 import com.pinguela.retroworld.model.Empleado;
 import com.pinguela.retroworld.service.EmpleadoService;
-import com.pinguela.retroworld.service.ServiceException;
 import com.pinguela.retroworld.service.impl.EmpleadoServiceImpl;
 import com.pinguela.retroworld.ui.desktop.dialog.CreateEmpleadoDialog;
 
@@ -29,14 +29,18 @@ public class CreateEmpleadoAction extends AbstractAction{
 	public void actionPerformed(ActionEvent e) {
 		try {
 			Empleado empleado = dialog.getEmpleado();
-			if(!empleado.getPassword().equals(new String(dialog.getRepeatPassword()))) {
-				JOptionPane.showMessageDialog(dialog, "Las constraseñas no coinciden", "Error contraseña", JOptionPane.ERROR_MESSAGE);
+			if(dialog.validarTextFields()) {
+				if(!empleado.getPassword().equals(new String(dialog.getRepeatPassword()))) {
+					JOptionPane.showMessageDialog(dialog, "Las constraseñas no coinciden", "Error contraseña", JOptionPane.ERROR_MESSAGE);
+				} else {
+					empleadoService.registrar(empleado);
+					logger.info("Empleado con id "+empleado.getId()+" registrado correctamente");
+					dialog.setVisible(false);
+					new OpenEmpleadoSearchAction().actionPerformed(e);
+					JOptionPane.showMessageDialog(dialog, "Empleado registrado correctamente");
+				}				
 			} else {
-				empleadoService.registrar(empleado);
-				logger.info("Empleado con id "+empleado.getId()+" registrado correctamente");
-				dialog.setVisible(false);
-				new OpenEmpleadoSearchAction().actionPerformed(e);
-				JOptionPane.showMessageDialog(dialog, "Empleado registrado correctamente");
+				JOptionPane.showMessageDialog(dialog, "Faltan campos por rellenar", "Error al crear empleado", JOptionPane.ERROR_MESSAGE);
 			}
 		} catch(DataException ex) {
 			logger.error(ex.getMessage(), ex);

@@ -22,9 +22,14 @@ public class AnuncioTableCellRenderer extends DefaultTableCellRenderer{
 		} else if(column==1) {
 			setText(anuncio.getEstadoAnuncio());
 		} else if(column==2) {
-			//TODO: DateFormatter
 			setText(anuncio.getFechaInicio().toString());
-		} else if(column==3) {
+		}else if(column==3) {
+			if(anuncio.getFechaFin()!=null) {
+				setText(anuncio.getFechaFin().toString());
+			}else {
+				setText("N/A");
+			}
+		}else if(column==4) {
 			setText(anuncio.getPrecio().toString());
 		}
 		return c;

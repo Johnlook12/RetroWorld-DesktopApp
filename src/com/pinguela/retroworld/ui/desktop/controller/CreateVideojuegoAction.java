@@ -1,15 +1,12 @@
 package com.pinguela.retroworld.ui.desktop.controller;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.Videojuego;
 import com.pinguela.retroworld.service.DesarrolladoraService;
 import com.pinguela.retroworld.service.VideojuegoService;
@@ -45,11 +42,15 @@ public class CreateVideojuegoAction extends BaseAction{
 	public void doAction() {
 		try {
 			Videojuego videojuego = dialog.getVideojuego();
-			videojuegoService.create(videojuego);	
-			logger.info("videojuego con id "+videojuego.getId()+" registrado");
-			JOptionPane.showMessageDialog(dialog, "Videojuego creado correctamente");
-			dialog.setVisible(false);
-			new AddVideojuegoImageAction(dialog).doAction();
+			if(dialog.validarTextFields()) {
+				videojuegoService.create(videojuego);	
+				logger.info("videojuego con id "+videojuego.getId()+" registrado");
+				JOptionPane.showMessageDialog(dialog, "Videojuego creado correctamente");
+				dialog.setVisible(false);
+				new AddVideojuegoImageAction(dialog).doAction();				
+			} else {
+				JOptionPane.showMessageDialog(dialog, "Faltan campos por rellenar", "Error al crear videojuego" , JOptionPane.ERROR_MESSAGE);
+			}
 		}catch(DataException de) {
 			logger.error(de.getMessage(),de);
 		}

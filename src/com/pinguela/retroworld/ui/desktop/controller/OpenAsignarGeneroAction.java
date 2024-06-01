@@ -10,7 +10,7 @@ import javax.swing.Icon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.Genero;
 import com.pinguela.retroworld.model.Videojuego;
 import com.pinguela.retroworld.service.GeneroService;

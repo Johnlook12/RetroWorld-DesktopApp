@@ -8,7 +8,7 @@ import javax.swing.JTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.Direccion;
 import com.pinguela.retroworld.model.Pedido;
 import com.pinguela.retroworld.model.Usuario;

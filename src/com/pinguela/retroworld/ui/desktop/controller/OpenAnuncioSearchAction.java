@@ -7,28 +7,22 @@ import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.table.TableModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
-import com.pinguela.retroworld.model.AbstractCriteria;
-import com.pinguela.retroworld.model.Anuncio;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.Genero;
 import com.pinguela.retroworld.model.Idioma;
 import com.pinguela.retroworld.model.Plataforma;
-import com.pinguela.retroworld.model.Results;
-import com.pinguela.retroworld.service.AnuncioService;
 import com.pinguela.retroworld.service.GeneroService;
 import com.pinguela.retroworld.service.IdiomaService;
 import com.pinguela.retroworld.service.PlataformaService;
-import com.pinguela.retroworld.service.impl.AnuncioServiceImpl;
 import com.pinguela.retroworld.service.impl.GeneroServiceImpl;
 import com.pinguela.retroworld.service.impl.IdiomaServiceImpl;
 import com.pinguela.retroworld.service.impl.PlataformaServiceImpl;
 import com.pinguela.retroworld.ui.desktop.RetroWorldWindow;
-import com.pinguela.retroworld.ui.desktop.model.AnuncioTableModel;
+import com.pinguela.retroworld.ui.desktop.utils.SwingUtils;
 import com.pinguela.retroworld.ui.desktop.view.AnuncioSearchView;
 
 public class OpenAnuncioSearchAction 
@@ -65,6 +59,9 @@ public class OpenAnuncioSearchAction
 			DefaultComboBoxModel<Genero> generoComboModel = new DefaultComboBoxModel<Genero>(generos.toArray(new Genero[generos.size()]));
 			DefaultComboBoxModel<Plataforma> plataformaComboModel = new DefaultComboBoxModel<Plataforma>(plataformas.toArray(new Plataforma[plataformas.size()]));
 			DefaultComboBoxModel<Idioma> idiomaComboModel = new DefaultComboBoxModel<Idioma>(idiomas.toArray(new Idioma[idiomas.size()]));
+			SwingUtils.setNullFirstElementModel(generoComboModel);
+			SwingUtils.setNullFirstElementModel(plataformaComboModel);
+			SwingUtils.setNullFirstElementModel(idiomaComboModel);
 			
 			view.setModel(generoComboModel, idiomaComboModel, plataformaComboModel);
 			view.setStart(new AnuncioPagedSearchAction(PagedSearchAction.START, view,"",

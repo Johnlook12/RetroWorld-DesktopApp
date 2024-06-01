@@ -20,7 +20,11 @@ public class DesarrolladoraListCellRenderer extends DefaultListCellRenderer{
 		        boolean isSelected,
 		        boolean cellHasFocus) {
 		Desarrolladora desarrolladora = (Desarrolladora) value;
-		super.setText("• "+desarrolladora.getNombre());
+		if(desarrolladora==null) {
+			setText("Seleccionar desarrolladora");
+		}else {
+			super.setText("• "+desarrolladora.getNombre());			
+		}
 		return this;
 	}
 }

@@ -6,11 +6,12 @@ import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.Anuncio;
 import com.pinguela.retroworld.model.Results;
 import com.pinguela.retroworld.service.AnuncioService;
 import com.pinguela.retroworld.service.impl.AnuncioServiceImpl;
+import com.pinguela.retroworld.ui.desktop.model.ModerarAnunciosTableModel;
 import com.pinguela.retroworld.ui.desktop.view.ModerarAnunciosView;
 
 public class RechazarAnuncioAction extends BaseAction{
@@ -49,8 +50,11 @@ public class RechazarAnuncioAction extends BaseAction{
 					logger.info("Anuncio con id: "+anuncio.getId()+" rechazado");
 					JOptionPane.showMessageDialog(view, "Anuncio rechazado");
 					Results<Anuncio> results = anuncioService.findBy(view.getCriteria(), view.getCurrentPosition(), view.PAGE_SIZE);
+					ModerarAnunciosTableModel model = new ModerarAnunciosTableModel(results.getPage());
+					view.setModel(model);
 					view.setResults(results);
 					view.updateView();
+					view.addButtonsColumn();
 				} else {
 					logger.error("Error al rechazar el anuncio con id: "+anuncio.getId());
 					JOptionPane.showMessageDialog(view, "No se pudo rechazar el anuncio", "Error al rechazar", JOptionPane.ERROR_MESSAGE);

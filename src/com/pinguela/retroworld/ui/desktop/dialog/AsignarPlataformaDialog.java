@@ -132,7 +132,7 @@ public class AsignarPlataformaDialog extends RWDialog{
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
-		JButton okButton = new JButton("OK");
+		JButton okButton = new JButton();
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(new ActionListener() {	
 			@Override
@@ -140,7 +140,7 @@ public class AsignarPlataformaDialog extends RWDialog{
 				firePropertyChange(VideojuegoDetailView.VIEOJUEGO_DETAIL_PROPERTY, null, selectedPlataformas);
 			}
 		});
-		okButton.setAction(new AsignarPlataformaAction(this));
+		okButton.setAction(new AsignarPlataformaAction(this, "OK"));
 		buttonPane.add(okButton);
 		getRootPane().setDefaultButton(okButton);
 

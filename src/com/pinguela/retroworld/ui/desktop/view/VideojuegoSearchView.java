@@ -32,6 +32,8 @@ import com.pinguela.retroworld.ui.desktop.renderer.GeneroListCellRenderer;
 import com.pinguela.retroworld.ui.desktop.renderer.IdiomaListCellRenderer;
 import com.pinguela.retroworld.ui.desktop.renderer.PlataformaListCellRenderer;
 import com.pinguela.retroworld.ui.desktop.renderer.VideojuegoTableCellRenderer;
+import com.pinguela.retroworld.ui.desktop.utils.FormatUtils;
+import com.pinguela.retroworld.ui.desktop.utils.SwingUtils;
 import com.toedter.calendar.JDateChooser;
 
 public class VideojuegoSearchView extends PaginatedSearchView<Videojuego> {
@@ -44,6 +46,7 @@ public class VideojuegoSearchView extends PaginatedSearchView<Videojuego> {
 	private JComboBox <Genero>generoComboBox;
 	private JTextField idTextField;
 	private JComboBox<Desarrolladora> desarrolladoraComboBox;
+	private JTextField nameTextField;
 
 	public VideojuegoSearchView() {
 		initialize();
@@ -140,7 +143,7 @@ public class VideojuegoSearchView extends PaginatedSearchView<Videojuego> {
 		gbc_nameLbl.gridy = 5;
 		getSearchFieldPanel().add(nameLbl, gbc_nameLbl);
 		
-		JTextField nameTextField = new JTextField();
+		nameTextField = new JTextField();
 		GridBagConstraints gbc_nameTextField = new GridBagConstraints();
 		gbc_nameTextField.insets = new Insets(0, 0, 5, 5);
 		gbc_nameTextField.fill = GridBagConstraints.HORIZONTAL;
@@ -212,10 +215,12 @@ public class VideojuegoSearchView extends PaginatedSearchView<Videojuego> {
 		plataformaComboBox.setRenderer(new PlataformaListCellRenderer());
 		generoComboBox.setRenderer(new GeneroListCellRenderer());
 		desarrolladoraComboBox.setRenderer(new DesarrolladoraListCellRenderer());
+		FormatUtils.setOnlyDigitsDocument(idTextField);
+		FormatUtils.setTextMaxChars(nameTextField, 80);
 	}
 
 	@Override
-	public AbstractCriteria getCriteria() {
+	public VideojuegoCriteria getCriteria() {
 		VideojuegoCriteria criteria= new VideojuegoCriteria();
 		criteria.setFechaLanzamientoDesde(fechaLanzamientoDesdeDateChooser.getDate());
 		criteria.setFechaLanzamientoHasta(fechaLanzamientoHastaDateChooser.getDate());
@@ -223,11 +228,19 @@ public class VideojuegoSearchView extends PaginatedSearchView<Videojuego> {
 		Genero g = (Genero) generoComboBox.getSelectedItem();
 		Plataforma p = (Plataforma) plataformaComboBox.getSelectedItem();
 		Desarrolladora d = (Desarrolladora) desarrolladoraComboBox.getSelectedItem();	
-//		criteria.setIdIdioma(i.getId());
-//		criteria.setIdGenero(g.getId());
-//		criteria.setIdPlataforma(p.getId());
-//		criteria.setIdDesarrolladora(d.getId());
-//		criteria.setId(Integer.valueOf(idTextField.getText().trim()));
+		if(i!=null) {
+			criteria.setIdIdioma(i.getId());			
+		}
+		if(g!=null) {
+			criteria.setIdGenero(g.getId());			
+		}
+		if(p!=null) {
+			criteria.setIdPlataforma(p.getId());			
+		}
+		if(d!=null) {
+			criteria.setIdDesarrolladora(d.getId());			
+		}
+		criteria.setId(SwingUtils.getIntegerValueOrNull(idTextField));
 		return criteria;
 	}
 	
@@ -237,6 +250,10 @@ public class VideojuegoSearchView extends PaginatedSearchView<Videojuego> {
 		generoComboBox.setModel(generoModel);
 		plataformaComboBox.setModel(plataformaModel);
 		desarrolladoraComboBox.setModel(desarrolladoraModel);
+		idiomaComboBox.setSelectedIndex(0);
+		generoComboBox.setSelectedIndex(0);
+		plataformaComboBox.setSelectedIndex(0);
+		desarrolladoraComboBox.setSelectedIndex(0);
 	}
 
 	@Override

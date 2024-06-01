@@ -63,6 +63,7 @@ public class VideojuegoDetailView extends JPanel {
 	private List<Idioma> idiomas;
 	private List<Genero> generos;
 	private List<Plataforma> plataformas;
+	private VideojuegoSearchView view;
 
 	private ImageService imageService;
 	private JButton guardarButton;
@@ -74,9 +75,10 @@ public class VideojuegoDetailView extends JPanel {
 
 
 
-	public VideojuegoDetailView(Videojuego v) {
+	public VideojuegoDetailView(Videojuego v, VideojuegoSearchView view) {
 		initServices();
 		this.videojuego=v;
+		this.view=view;
 		setLayout(new BorderLayout(0, 0));
 
 		JPanel dataPane = new JPanel();
@@ -249,7 +251,7 @@ public class VideojuegoDetailView extends JPanel {
 		add(buttonsPane, BorderLayout.SOUTH);
 
 		guardarButton = new JButton();
-		guardarButton.setAction(new UpdateVideojuegoAction(this, "Guardar"));
+		guardarButton.setAction(new UpdateVideojuegoAction(this,view, "Guardar"));
 		buttonsPane.add(guardarButton);
 		
 
@@ -287,7 +289,7 @@ public class VideojuegoDetailView extends JPanel {
 		SwingUtils.changeDateChooserColor(fechaLanzamientoDateChooser, Color.WHITE);
 	}
 	
-	private void showEditInterface(Boolean editable) {
+	public void showEditInterface(Boolean editable) {
 		SwingUtils.setEditableTextArea(descripcionTextArea, editable);
 		guardarButton.setVisible(editable);
 		cancelarButton.setVisible(editable);

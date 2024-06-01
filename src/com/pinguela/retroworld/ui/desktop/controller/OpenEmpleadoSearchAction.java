@@ -1,5 +1,6 @@
 package com.pinguela.retroworld.ui.desktop.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -7,7 +8,7 @@ import javax.swing.Icon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.Empleado;
 import com.pinguela.retroworld.service.EmpleadoService;
 import com.pinguela.retroworld.service.impl.EmpleadoServiceImpl;
@@ -38,10 +39,11 @@ public class OpenEmpleadoSearchAction extends BaseAction{
 	public void doAction() {
 		try {
 			List<Empleado> empleados = empleadoService.findByAll();
+			
 			EmpleadoSearchView view = new EmpleadoSearchView();
 			RetroWorldWindow window = RetroWorldWindow.getInstance();
-			view.setResults(empleados);
-			EmpleadoTableModel model = new EmpleadoTableModel(empleados);
+			view.setEmpleados(empleados);
+			EmpleadoTableModel model = new EmpleadoTableModel(view.getActiveEmpleados());
 			view.setTableModel(model);
 			view.updateView();
 			window.setCenterView(view);

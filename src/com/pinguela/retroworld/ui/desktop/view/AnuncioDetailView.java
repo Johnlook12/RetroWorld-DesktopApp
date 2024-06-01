@@ -18,6 +18,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -33,7 +34,9 @@ import com.pinguela.retroworld.model.Anuncio;
 import com.pinguela.retroworld.model.Empleado;
 import com.pinguela.retroworld.model.Modificacion;
 import com.pinguela.retroworld.ui.desktop.RetroWorldWindow;
+import com.pinguela.retroworld.ui.desktop.controller.OpenModificacionesAction;
 import com.pinguela.retroworld.ui.desktop.controller.UpdateAnuncioAction;
+import com.pinguela.retroworld.ui.desktop.utils.FormatUtils;
 import com.pinguela.retroworld.ui.desktop.utils.SwingUtils;
 import com.toedter.calendar.JDateChooser;
 
@@ -46,10 +49,10 @@ public class AnuncioDetailView extends JPanel {
 	private Anuncio anuncio = null;
 	List<Modificacion> modificaciones = null;
 	List<BufferedImage> imagenes = null;
+	private PaginatedSearchView view;
 
 	private Empleado empleadoAutenticado=null;
 	private JTextField tituloValueTextField;
-	private JTextField precioValueTextField;
 	private JPanel imageCarruselPane;
 	private JPanel ImagenesPane;
 	private JPanel mainImagePane;
@@ -61,8 +64,11 @@ public class AnuncioDetailView extends JPanel {
 	private JButton cancelEditButton;
 	private JButton bajaButton;
 	private JButton editarButton;
+	private JFormattedTextField precioValueFormattedTextField;
+	private JButton modificacionesButton;
 
-	public AnuncioDetailView(Anuncio a) {
+	public AnuncioDetailView(Anuncio a, PaginatedSearchView view) {
+		this.view=view;
 		this.anuncio=a;
 
 		setLayout(new BorderLayout(0, 0));
@@ -121,15 +127,14 @@ public class AnuncioDetailView extends JPanel {
 		gbc_precioLbl.gridx = 0;
 		gbc_precioLbl.gridy = 2;
 		dataPane.add(precioLbl, gbc_precioLbl);
-
-		precioValueTextField = new JTextField();
-		precioValueTextField.setColumns(10);
-		GridBagConstraints gbc_precioValueTextField = new GridBagConstraints();
-		gbc_precioValueTextField.insets = new Insets(0, 0, 5, 5);
-		gbc_precioValueTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_precioValueTextField.gridx = 1;
-		gbc_precioValueTextField.gridy = 2;
-		dataPane.add(precioValueTextField, gbc_precioValueTextField);
+		
+		precioValueFormattedTextField = new JFormattedTextField();
+		GridBagConstraints gbc_precioValueFormattedTextField = new GridBagConstraints();
+		gbc_precioValueFormattedTextField.insets = new Insets(0, 0, 5, 5);
+		gbc_precioValueFormattedTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_precioValueFormattedTextField.gridx = 1;
+		gbc_precioValueFormattedTextField.gridy = 2;
+		dataPane.add(precioValueFormattedTextField, gbc_precioValueFormattedTextField);
 
 		JLabel descripcionLbl = new JLabel("Descripción: ");
 		descripcionLbl.setFont(new Font("Arial", Font.BOLD, 14));
@@ -166,6 +171,15 @@ public class AnuncioDetailView extends JPanel {
 		gbc_fechaInicioDateChooser.gridx = 1;
 		gbc_fechaInicioDateChooser.gridy = 6;
 		dataPane.add(fechaInicioDateChooser, gbc_fechaInicioDateChooser);
+		
+		modificacionesButton = new JButton();
+		modificacionesButton.setAction(new OpenModificacionesAction(this, "Modificaciones",
+				new ImageIcon(RetroWorldWindow.class.getResource("/nuvola/32x32/1872_view_text_list_view_text_list.png"))));
+		GridBagConstraints gbc_modificacionesButton = new GridBagConstraints();
+		gbc_modificacionesButton.insets = new Insets(0, 0, 0, 5);
+		gbc_modificacionesButton.gridx = 3;
+		gbc_modificacionesButton.gridy = 7;
+		dataPane.add(modificacionesButton, gbc_modificacionesButton);
 
 		JPanel buttonPane = new JPanel();
 		add(buttonPane, BorderLayout.SOUTH);
@@ -178,7 +192,7 @@ public class AnuncioDetailView extends JPanel {
 		});
 
 		guardarButton = new JButton();
-		guardarButton.setAction(new UpdateAnuncioAction(this, "Guardar"));
+		guardarButton.setAction(new UpdateAnuncioAction(this,view, "Guardar"));
 		buttonPane.add(guardarButton);
 		buttonPane.add(editarButton);
 
@@ -217,6 +231,8 @@ public class AnuncioDetailView extends JPanel {
 			updateView();
 			showEditInterface(false);
 			empleadoAutenticado = RetroWorldWindow.getInstance().getEmpleadoAutenticado();
+			SwingUtils.setEditableDateChooser(fechaInicioDateChooser, false);
+			FormatUtils.setDecimalFormat(precioValueFormattedTextField);
 			
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
@@ -224,21 +240,21 @@ public class AnuncioDetailView extends JPanel {
 	}
 	
 	public void updateView() {
-		precioValueTextField.setText(anuncio.getPrecio().toString());
 		tituloValueTextField.setText(anuncio.getTitulo());
 		idValueLbl.setText(anuncio.getId().toString());
 		descripcionTextArea.setText(anuncio.getDescripcion());
 		fechaInicioDateChooser.setDate(anuncio.getFechaInicio());
+		precioValueFormattedTextField.setValue(anuncio.getPrecio());
 	}
 	
 	public void updateAnuncio() {
 		List<JComponent>fields = new ArrayList<JComponent>();
 		fields.add(tituloValueTextField);
 		fields.add(descripcionTextArea);
-		fields.add(precioValueTextField);
+		fields.add(precioValueFormattedTextField);
 		modificaciones = addModificacion(fields, anuncio);
 		
-		anuncio.setPrecio(Double.valueOf(precioValueTextField.getText()));
+		anuncio.setPrecio((Double)precioValueFormattedTextField.getValue());
 		anuncio.setTitulo(tituloValueTextField.getText());
 		anuncio.setDescripcion(descripcionTextArea.getText());
 	}
@@ -281,11 +297,10 @@ public class AnuncioDetailView extends JPanel {
 		});
 	}
 
-	private void showEditInterface(boolean editable) {
+	public void showEditInterface(boolean editable) {
 		SwingUtils.setEditableTextField(tituloValueTextField, editable);
-		SwingUtils.setEditableTextField(precioValueTextField, editable);
-		SwingUtils.setEditableTextArea(descripcionTextArea, editable);                                                                                                                                                                                                                                                                                                                                                                                                                             
-		SwingUtils.setEditableDateChooser(fechaInicioDateChooser, editable);
+		SwingUtils.setEditableTextField(precioValueFormattedTextField, editable);
+		SwingUtils.setEditableTextArea(descripcionTextArea, editable);
 		cancelEditButton.setVisible(editable);
 		guardarButton.setVisible(editable);
 		if(editable==false) {
@@ -307,7 +322,7 @@ public class AnuncioDetailView extends JPanel {
 					if(tituloValueTextField.getText()!=a.getTitulo()) {
 						m.setIdTipoModificacion(m.MODIFICACION_TITULO);
 					}
-				} else if(field==precioValueTextField && !Double.valueOf(precioValueTextField.getText()).equals(anuncio.getPrecio())) {
+				} else if(field==precioValueFormattedTextField && !precioValueFormattedTextField.getValue().equals(anuncio.getPrecio())) {
 					m.setIdTipoModificacion(m.MODIFICACION_PRECIO);
 				} else if(field==descripcionTextArea && !descripcionTextArea.getText().equalsIgnoreCase(anuncio.getDescripcion())) {
 					m.setIdTipoModificacion(m.MODIFICACION_DESCRIPCION);

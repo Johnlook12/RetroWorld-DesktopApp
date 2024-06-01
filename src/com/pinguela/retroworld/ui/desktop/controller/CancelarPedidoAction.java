@@ -8,11 +8,13 @@ import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.EstadoPedido;
 import com.pinguela.retroworld.model.Pedido;
 import com.pinguela.retroworld.service.PedidoService;
 import com.pinguela.retroworld.service.impl.PedidoServiceImpl;
+import com.pinguela.retroworld.ui.desktop.model.PedidoAbiertoTableModel;
+import com.pinguela.retroworld.ui.desktop.model.PedidoCerradoTableModel;
 import com.pinguela.retroworld.ui.desktop.view.PedidoSearchView;
 
 public class CancelarPedidoAction extends BaseAction{
@@ -52,7 +54,10 @@ public class CancelarPedidoAction extends BaseAction{
 					JOptionPane.showMessageDialog(view, "Pedido cancelado correctamente");
 					List<Pedido> pedidos = pedidoService.findByAll();
 					view.setPedidos(pedidos);
-					view.updateModel();
+					PedidoAbiertoTableModel abiertosModel = new PedidoAbiertoTableModel(view.getPedidosAbiertos());
+					PedidoCerradoTableModel cerradosModel = new PedidoCerradoTableModel(view.getPedidosCerrados());
+					view.setModel(abiertosModel, cerradosModel);
+					view.addButtonsColumn();
 				} else {
 					logger.error("Error al cancelar el pedido con id "+pedido.getId());
 					JOptionPane.showMessageDialog(view, "No se pudo cancelar el pedido", "Error al cancelar", JOptionPane.ERROR_MESSAGE);

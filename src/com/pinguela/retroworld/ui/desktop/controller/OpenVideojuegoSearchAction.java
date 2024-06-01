@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.Desarrolladora;
 import com.pinguela.retroworld.model.Genero;
 import com.pinguela.retroworld.model.Idioma;
@@ -25,6 +25,7 @@ import com.pinguela.retroworld.service.impl.GeneroServiceImpl;
 import com.pinguela.retroworld.service.impl.IdiomaServiceImpl;
 import com.pinguela.retroworld.service.impl.PlataformaServiceImpl;
 import com.pinguela.retroworld.ui.desktop.RetroWorldWindow;
+import com.pinguela.retroworld.ui.desktop.utils.SwingUtils;
 import com.pinguela.retroworld.ui.desktop.view.VideojuegoSearchView;
 
 public class OpenVideojuegoSearchAction extends AbstractAction{
@@ -63,6 +64,10 @@ public class OpenVideojuegoSearchAction extends AbstractAction{
 			DefaultComboBoxModel<Genero> generoModel = new DefaultComboBoxModel<Genero>(generos.toArray(new Genero[generos.size()]));
 			DefaultComboBoxModel<Plataforma> plataformaModel = new DefaultComboBoxModel<Plataforma>(plataformas.toArray(new Plataforma[plataformas.size()]));
 			DefaultComboBoxModel<Desarrolladora> desarrolladoraModel = new DefaultComboBoxModel<Desarrolladora>(desarrolladoras.toArray(new Desarrolladora[desarrolladoras.size()]));
+			SwingUtils.setNullFirstElementModel(desarrolladoraModel);
+			SwingUtils.setNullFirstElementModel(generoModel);
+			SwingUtils.setNullFirstElementModel(plataformaModel);
+			SwingUtils.setNullFirstElementModel(idiomaModel);
 			view.setModel(idiomaModel, plataformaModel, generoModel,desarrolladoraModel);
 			view.setStart(new VideojuegoPagedSearchAction(PagedSearchAction.START, view, "", 
 					new ImageIcon(RetroWorldWindow.class.getResource("/icons/icons8-arrow-left-22.png"))));

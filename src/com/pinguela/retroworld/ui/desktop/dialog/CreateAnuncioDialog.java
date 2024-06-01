@@ -1,6 +1,7 @@
 package com.pinguela.retroworld.ui.desktop.dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -26,6 +27,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.JTextComponent;
 
 import com.pinguela.retroworld.model.Anuncio;
 import com.pinguela.retroworld.model.EstadoAnuncio;
@@ -38,6 +40,8 @@ import com.pinguela.retroworld.ui.desktop.controller.SelectAnuncioImageAction;
 import com.pinguela.retroworld.ui.desktop.renderer.ComboBoxFilterDecorator;
 import com.pinguela.retroworld.ui.desktop.renderer.EstadoVideojuegoListCellRenderer;
 import com.pinguela.retroworld.ui.desktop.renderer.VideojuegoListCellRenderer;
+import com.pinguela.retroworld.ui.desktop.utils.FormatUtils;
+import com.pinguela.retroworld.ui.desktop.utils.SwingUtils;
 import com.toedter.calendar.JDateChooser;
 
 public class CreateAnuncioDialog extends RWDialog {
@@ -58,6 +62,7 @@ public class CreateAnuncioDialog extends RWDialog {
 	private List<File> imageFiles;
 	private JSpinner precioSpinner;
 	private JComboBox estadoVideojuegoComboBox;
+	private List<JTextComponent> textFields;
 
 	public static void main(String[] args) {
 		try {
@@ -147,6 +152,7 @@ public class CreateAnuncioDialog extends RWDialog {
 
 
 		fechaLanzamientoDateChooser = new JDateChooser();
+		fechaLanzamientoDateChooser.setDateFormatString("dd/MM/yyyy");
 		GridBagConstraints gbc_fechaLanzamientoDateChooser = new GridBagConstraints();
 		gbc_fechaLanzamientoDateChooser.insets = new Insets(0, 0, 5, 5);
 		gbc_fechaLanzamientoDateChooser.fill = GridBagConstraints.BOTH;
@@ -265,6 +271,12 @@ public class CreateAnuncioDialog extends RWDialog {
 		descripcionTextArea.setLineWrap(true);
 		descripcionTextArea.setWrapStyleWord(true);
 		estadoVideojuegoComboBox.setRenderer(new EstadoVideojuegoListCellRenderer());
+		FormatUtils.setTextMaxChars(tituloTextField, 150);
+		FormatUtils.setTextMaxChars(descripcionTextArea, 1000);
+		textFields = new ArrayList<JTextComponent>();
+		textFields.add(descripcionTextArea);
+		textFields.add(tituloTextField);
+		SwingUtils.changeDateChooserColor(fechaLanzamientoDateChooser, Color.WHITE);
 	}
 	
 	private static boolean videojuegoFilter(Videojuego v, String textToFilter) {
@@ -308,6 +320,15 @@ public class CreateAnuncioDialog extends RWDialog {
 	
 	public void setVideojuegos(Results<Videojuego> videojuegos) {
 		this.videojuegos=videojuegos;
+	}
+	
+	public boolean validarTextFields() {
+		for(JTextComponent field:textFields) {
+			if(field.getText().isEmpty()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void setPreviewImageLbl(JLabel imageLbl) {

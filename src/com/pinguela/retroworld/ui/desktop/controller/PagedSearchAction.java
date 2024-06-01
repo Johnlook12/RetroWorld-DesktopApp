@@ -7,8 +7,7 @@ import javax.swing.table.TableModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.PinguelaException;
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.AbstractCriteria;
 import com.pinguela.retroworld.model.Results;
 import com.pinguela.retroworld.ui.desktop.view.PaginatedSearchView;
@@ -50,16 +49,16 @@ public abstract class PagedSearchAction<T> extends BaseAction{
 	 */
 	public void doAction() {
 		try {		
-
 			AbstractCriteria criteria = view.getCriteria();
 			Results<T> results = doSearch(criteria);
 
 			logger.info("Found "+results.getTotal()+" for: "+criteria);
 			view.setResults(results);
+			
 			view.setTableModel(getResultsTableModel());
 			
 			view.setCurrentPosition(getCurrentPosition());
-
+			
 			view.updateView();
 			view.addButtonsColumn();
 		} catch(DataException de) {
@@ -107,7 +106,6 @@ public abstract class PagedSearchAction<T> extends BaseAction{
 			position =  total-sobrante+1;	
 			break;
 		}
-		System.out.println("currentPosticion = "+position);
 		return position;
 	}
 

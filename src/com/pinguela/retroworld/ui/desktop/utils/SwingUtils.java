@@ -8,12 +8,15 @@ import java.awt.Window;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.JTextComponent;
 
 import org.imgscalr.Scalr;
 
@@ -22,6 +25,10 @@ import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 
 public class SwingUtils {
+	
+	public SwingUtils() {
+	}
+	
 	public static final void centerOnScreen(JDialog dialog) {	
 		dialog.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - dialog.getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - dialog.getHeight()/2);
 	}
@@ -117,6 +124,26 @@ public class SwingUtils {
                 }
             });
         }
+	}
+	
+	public static final String getTextFieldValueOrNull(JTextComponent textField) {
+        String value = textField.getText().trim(); 
+        return value.isEmpty() ? null : value.trim();
+    }
+	
+	public static final Long getLongValueOrNull(JTextComponent textField) {
+		String value = textField.getText().trim();
+		return value.isEmpty() ? null : Long.valueOf(value.trim());
+	}
+	
+	public static final Integer getIntegerValueOrNull(JTextComponent textField) {
+		String value = textField.getText().trim();
+		return value.isEmpty() ? null : Integer.valueOf(value.trim());
+	}
+	
+	public static final void setNullFirstElementModel(DefaultComboBoxModel model) {
+		Object value = null;
+		model.insertElementAt(value, 0);
 	}
 	
 }

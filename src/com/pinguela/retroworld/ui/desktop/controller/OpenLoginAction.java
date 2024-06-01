@@ -40,6 +40,7 @@ public class OpenLoginAction extends BaseAction{
 		RetroWorldWindow window = RetroWorldWindow.getInstance();
 		loginDialog.getContentPane().add(loginView);
 		window.setLoginDialog(loginDialog);
+		window.setLoginView(loginView);
 		window.showLoginView();
 		
 		

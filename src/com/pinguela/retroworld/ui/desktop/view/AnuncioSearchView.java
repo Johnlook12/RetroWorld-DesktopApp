@@ -9,8 +9,10 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Locale;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -18,6 +20,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -46,10 +49,12 @@ import com.pinguela.retroworld.ui.desktop.renderer.ButtonColumn;
 import com.pinguela.retroworld.ui.desktop.renderer.GeneroListCellRenderer;
 import com.pinguela.retroworld.ui.desktop.renderer.IdiomaListCellRenderer;
 import com.pinguela.retroworld.ui.desktop.renderer.PlataformaListCellRenderer;
+import com.pinguela.retroworld.ui.desktop.utils.FormatUtils;
 import com.pinguela.retroworld.ui.desktop.utils.SwingUtils;
 import com.toedter.calendar.JDateChooser;
 
 public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
+	
 	private static Logger logger = LogManager.getLogger(AnuncioSearchView.class);
 	
 	private JTextField tituloTextField;
@@ -64,11 +69,13 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 	private JComboBox<Plataforma> plataformaComboBox;
 	private JLabel precioDesdeSliderLbl;
 	private JLabel precioHastaSliderLbl;
-	private JSpinner idUsuarioSpinner;
-	private JSpinner idEmpleadoSpinner;
-
+	private JFormattedTextField idUsuarioFormattedTextField;
+	private JFormattedTextField idEmpleadoFormattedTextField;
+	private JFormattedTextField idAnuncioFormattedTextField;
+	
 	// Modelo de esta vista	
 	private AnuncioCriteria criteria = null;
+	
 
 	
 	
@@ -77,7 +84,7 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 		GridBagLayout gbl_searchFieldPanel = new GridBagLayout();
 		gbl_searchFieldPanel.columnWidths = new int[]{1, 30, 1, 59, 16, 36, 43, 32, 1, 9, 70, 70, 41, 28, 1, 35, 54, 30, 0};
 		gbl_searchFieldPanel.rowHeights = new int[]{36, 0, 32, 0, 26, 36, 32, 30, 25, 0, 0, 0};
-		gbl_searchFieldPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_searchFieldPanel.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_searchFieldPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		getSearchFieldPanel().setLayout(gbl_searchFieldPanel);
 		
@@ -98,14 +105,14 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 		gbc_idAnuncioLbl.gridy = 3;
 		getSearchFieldPanel().add(idAnuncioLbl, gbc_idAnuncioLbl);
 		
-		JSpinner idAnuncioSpinner = new JSpinner();
-		GridBagConstraints gbc_idAnuncioSpinner = new GridBagConstraints();
-		gbc_idAnuncioSpinner.fill = GridBagConstraints.HORIZONTAL;
-		gbc_idAnuncioSpinner.gridwidth = 2;
-		gbc_idAnuncioSpinner.insets = new Insets(0, 0, 5, 5);
-		gbc_idAnuncioSpinner.gridx = 2;
-		gbc_idAnuncioSpinner.gridy = 3;
-		getSearchFieldPanel().add(idAnuncioSpinner, gbc_idAnuncioSpinner);
+		idAnuncioFormattedTextField = new JFormattedTextField();
+		GridBagConstraints gbc_idAnuncioFormattedTextField = new GridBagConstraints();
+		gbc_idAnuncioFormattedTextField.gridwidth = 2;
+		gbc_idAnuncioFormattedTextField.insets = new Insets(0, 0, 5, 5);
+		gbc_idAnuncioFormattedTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_idAnuncioFormattedTextField.gridx = 2;
+		gbc_idAnuncioFormattedTextField.gridy = 3;
+		getSearchFieldPanel().add(idAnuncioFormattedTextField, gbc_idAnuncioFormattedTextField);
 		
 		JLabel idiomaLbl = new JLabel("Idioma: ");
 		GridBagConstraints gbc_idiomaLbl = new GridBagConstraints();
@@ -286,6 +293,7 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 		getSearchFieldPanel().add(fechaFinLbl, gbc_fechaFinLbl);
 		
 		fechaFinDateChooser = new JDateChooser();
+		fechaFinDateChooser.setDateFormatString("dd/MM/yyyy");
 		fechaFinDateChooser.setForeground(new Color(0, 0, 0));
 		GridBagConstraints gbc_fechaFinDateChooser = new GridBagConstraints();
 		gbc_fechaFinDateChooser.fill = GridBagConstraints.HORIZONTAL;
@@ -325,27 +333,27 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 		GridBagConstraints gbc_videojuegoTextField = new GridBagConstraints();
 		gbc_videojuegoTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_videojuegoTextField.insets = new Insets(0, 0, 5, 5);
-		gbc_videojuegoTextField.gridwidth = 2;
+		gbc_videojuegoTextField.gridwidth = 4;
 		gbc_videojuegoTextField.gridx = 2;
 		gbc_videojuegoTextField.gridy = 7;
 		getSearchFieldPanel().add(videojuegoTextField, gbc_videojuegoTextField);
 		
 		JLabel idUsuarioLbl = new JLabel("ID Usuario:");
 		GridBagConstraints gbc_idUsuarioLbl = new GridBagConstraints();
-		gbc_idUsuarioLbl.anchor = GridBagConstraints.WEST;
+		gbc_idUsuarioLbl.anchor = GridBagConstraints.EAST;
 		gbc_idUsuarioLbl.insets = new Insets(0, 0, 5, 5);
-		gbc_idUsuarioLbl.gridx = 5;
+		gbc_idUsuarioLbl.gridx = 6;
 		gbc_idUsuarioLbl.gridy = 7;
 		getSearchFieldPanel().add(idUsuarioLbl, gbc_idUsuarioLbl);
 		
-		idUsuarioSpinner = new JSpinner();
-		GridBagConstraints gbc_idUsuarioSpinner = new GridBagConstraints();
-		gbc_idUsuarioSpinner.fill = GridBagConstraints.HORIZONTAL;
-		gbc_idUsuarioSpinner.gridwidth = 2;
-		gbc_idUsuarioSpinner.insets = new Insets(0, 0, 5, 5);
-		gbc_idUsuarioSpinner.gridx = 6;
-		gbc_idUsuarioSpinner.gridy = 7;
-		getSearchFieldPanel().add(idUsuarioSpinner, gbc_idUsuarioSpinner);
+		idUsuarioFormattedTextField = new JFormattedTextField();
+		GridBagConstraints gbc_idUsuarioFormattedTextField = new GridBagConstraints();
+		gbc_idUsuarioFormattedTextField.gridwidth = 2;
+		gbc_idUsuarioFormattedTextField.insets = new Insets(0, 0, 5, 5);
+		gbc_idUsuarioFormattedTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_idUsuarioFormattedTextField.gridx = 7;
+		gbc_idUsuarioFormattedTextField.gridy = 7;
+		getSearchFieldPanel().add(idUsuarioFormattedTextField, gbc_idUsuarioFormattedTextField);
 		
 		JLabel idEmpleadoLbl = new JLabel("ID Empleado:");
 		GridBagConstraints gbc_idEmpleadoLbl = new GridBagConstraints();
@@ -355,14 +363,13 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 		gbc_idEmpleadoLbl.gridy = 7;
 		getSearchFieldPanel().add(idEmpleadoLbl, gbc_idEmpleadoLbl);
 		
-		idEmpleadoSpinner = new JSpinner();
-		GridBagConstraints gbc_idEmpleadoSpinner = new GridBagConstraints();
-		gbc_idEmpleadoSpinner.fill = GridBagConstraints.HORIZONTAL;
-		gbc_idEmpleadoSpinner.gridwidth = 2;
-		gbc_idEmpleadoSpinner.insets = new Insets(0, 0, 5, 5);
-		gbc_idEmpleadoSpinner.gridx = 12;
-		gbc_idEmpleadoSpinner.gridy = 7;
-		getSearchFieldPanel().add(idEmpleadoSpinner, gbc_idEmpleadoSpinner);
+		idEmpleadoFormattedTextField = new JFormattedTextField();
+		GridBagConstraints gbc_idEmpleadoFormattedTextField = new GridBagConstraints();
+		gbc_idEmpleadoFormattedTextField.insets = new Insets(0, 0, 5, 5);
+		gbc_idEmpleadoFormattedTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_idEmpleadoFormattedTextField.gridx = 12;
+		gbc_idEmpleadoFormattedTextField.gridy = 7;
+		getSearchFieldPanel().add(idEmpleadoFormattedTextField, gbc_idEmpleadoFormattedTextField);
 		
 		JLabel estadoAnuncioLbl = new JLabel("Estado Anuncio:");
 		GridBagConstraints gbc_estadoAnuncioLbl = new GridBagConstraints();
@@ -438,6 +445,11 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 			SwingUtils.changeDateChooserColor(fechaFinDateChooser, Color.WHITE);
 			SwingUtils.changeDateChooserColor(fechaInicioDateChooser, Color.WHITE);
 			getTableResults().setDefaultRenderer(Object.class, new AnuncioTableCellRenderer());
+			FormatUtils.setOnlyDigitsDocument(idEmpleadoFormattedTextField);
+			FormatUtils.setOnlyDigitsDocument(idUsuarioFormattedTextField);
+			FormatUtils.setOnlyDigitsDocument(idAnuncioFormattedTextField);
+			FormatUtils.setTextMaxChars(tituloTextField, 100);
+			FormatUtils.setTextMaxChars(videojuegoTextField, 80);
 		} catch(Exception ex) {
 			logger.error(ex);
 		}
@@ -448,7 +460,9 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 		generoComboBox.setModel(generoModel);
 		plataformaComboBox.setModel(plataformaModel);
 		idiomaComboBox.setModel(idiomaModel);
-		idiomaComboBox.setSelectedIndex(6);
+		idiomaComboBox.setSelectedIndex(0);
+		generoComboBox.setSelectedIndex(0);
+		plataformaComboBox.setSelectedIndex(0);
 	}
 	
 	protected Integer getSelectedEstado() {
@@ -465,31 +479,41 @@ public class AnuncioSearchView extends PaginatedSearchView<Anuncio> {
 	
 	public AnuncioCriteria getCriteria() {
 		AnuncioCriteria criteria = new AnuncioCriteria();
+		criteria.setIdAnuncio(SwingUtils.getLongValueOrNull(idAnuncioFormattedTextField));
+		criteria.setIdEmpleado(SwingUtils.getLongValueOrNull(idEmpleadoFormattedTextField));
+		criteria.setIdUsuario(SwingUtils.getLongValueOrNull(idUsuarioFormattedTextField));
 		criteria.setNombre(tituloTextField.getText().trim());
+		criteria.setNombreVideojuego(videojuegoTextField.getText().trim());
 		Date fechaInicio = fechaInicioDateChooser.getDate();
 		criteria.setFechaInicio(fechaInicio);
+		Date fechaFin= fechaFinDateChooser.getDate();
+		criteria.setFechaFin(fechaFin);
 		Idioma i = (Idioma)idiomaComboBox.getSelectedItem();
-		criteria.setIdIdiomaVideojuego(i.getId());
+		Plataforma p = (Plataforma)plataformaComboBox.getSelectedItem();
+		Genero g = (Genero) generoComboBox.getSelectedItem();
+		if(i!=null) {
+			criteria.setIdIdiomaVideojuego(i.getId());			
+		}
+		if(p!=null) {
+			criteria.setIdPlataformaVideojuego(p.getId());
+		}
+		if(g!=null) {
+			criteria.setIdGeneroVideojuego(g.getId());
+		}
 		criteria.setPrecioDesde((double)precioDesdeSlider.getValue());
 		criteria.setPrecioHasta((double)precioHastaSlider.getValue());
 		logger.info("Buscando anuncios por "+criteria);
 		Integer estadoId = getSelectedEstado();
-		
 		criteria.setIdEstadoAnuncio(estadoId);
-		if((Integer)idEmpleadoSpinner.getValue()!=0) {
-			criteria.setIdEmpleado(Long.valueOf((Integer)idEmpleadoSpinner.getValue()));
-		}
-		if((Integer)idUsuarioSpinner.getValue()!=0) {
-			criteria.setIdUsuario(Long.valueOf((Integer)idUsuarioSpinner.getValue()));
-		}
+		
 		return criteria;
 	}
 
 	@Override
 	public void addButtonsColumn() {
-		ButtonColumn detailButton = new ButtonColumn(getTableResults(), new OpenAnuncioDetailAction(this), 4, 
+		ButtonColumn detailButton = new ButtonColumn(getTableResults(), new OpenAnuncioDetailAction(this), 5, 
 				new ImageIcon(RetroWorldWindow.class.getResource("/nuvola/16x16/1431_editors_editors_package_package.png")));
-		ButtonColumn deleteColumn = new ButtonColumn(getTableResults(), new SoftDeleteAnuncioAction(this), 5,
+		ButtonColumn deleteColumn = new ButtonColumn(getTableResults(), new SoftDeleteAnuncioAction(this), 6,
 				new ImageIcon(RetroWorldWindow.class.getResource("/nuvola/16x16/1815_no_no.png")));
 	}
 	

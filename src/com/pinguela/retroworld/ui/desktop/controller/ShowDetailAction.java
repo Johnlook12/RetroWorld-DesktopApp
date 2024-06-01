@@ -1,7 +1,6 @@
 package com.pinguela.retroworld.ui.desktop.controller;
 
 import java.awt.event.ActionEvent;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JDialog;
@@ -9,11 +8,7 @@ import javax.swing.JDialog;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
 import com.pinguela.retroworld.model.Anuncio;
-import com.pinguela.retroworld.model.Genero;
-import com.pinguela.retroworld.model.Idioma;
-import com.pinguela.retroworld.model.Plataforma;
 import com.pinguela.retroworld.model.Videojuego;
 import com.pinguela.retroworld.service.GeneroService;
 import com.pinguela.retroworld.service.IdiomaService;
@@ -25,9 +20,7 @@ import com.pinguela.retroworld.service.impl.ImageServiceImpl;
 import com.pinguela.retroworld.service.impl.PlataformaServiceImpl;
 import com.pinguela.retroworld.ui.desktop.dialog.RWDialog;
 import com.pinguela.retroworld.ui.desktop.utils.SwingUtils;
-import com.pinguela.retroworld.ui.desktop.view.AnuncioDetailView;
 import com.pinguela.retroworld.ui.desktop.view.PaginatedSearchView;
-import com.pinguela.retroworld.ui.desktop.view.VideojuegoDetailView;
 
 public class ShowDetailAction extends AbstractAction{
 	

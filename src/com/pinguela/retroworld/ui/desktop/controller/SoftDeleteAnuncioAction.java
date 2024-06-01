@@ -6,11 +6,13 @@ import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.Anuncio;
 import com.pinguela.retroworld.service.AnuncioService;
 import com.pinguela.retroworld.service.impl.AnuncioServiceImpl;
+import com.pinguela.retroworld.ui.desktop.model.AnuncioTableModel;
 import com.pinguela.retroworld.ui.desktop.view.AnuncioSearchView;
+import com.pinguela.retroworld.ui.desktop.view.PaginatedSearchView;
 
 public class SoftDeleteAnuncioAction extends BaseAction{
 	
@@ -40,15 +42,21 @@ public class SoftDeleteAnuncioAction extends BaseAction{
 		try {
 			int filaSeleccionada = view.getTableResults().getSelectedRow();
 			Anuncio anuncio = (Anuncio) view.getTableResults().getModel().getValueAt(filaSeleccionada, 0);
-			int answer = JOptionPane.showConfirmDialog(view, "¿Dar de baja anuncio?", "Confirmar baja", JOptionPane.YES_NO_OPTION);
-			if(answer==JOptionPane.YES_OPTION) {
-				if(anuncioService.delete(anuncio.getId())) {
-					logger.info("anuncio con id: "+anuncio.getId()+" dado de baja");
-					JOptionPane.showMessageDialog(view, "Anuncio dado de baja correctamente");
-				} else {
-					logger.error("error al dar de baja el anuncio con id: "+anuncio.getId());
-					JOptionPane.showMessageDialog(view,"Error al dar de baja el anuncio", "Error al eliminar", JOptionPane.ERROR_MESSAGE);
-				}
+			if(anuncio.getFechaFin()==null) {
+				int answer = JOptionPane.showConfirmDialog(view, "¿Dar de baja anuncio?", "Confirmar baja", JOptionPane.YES_NO_OPTION);
+				if(answer==JOptionPane.YES_OPTION) {
+					if(anuncioService.delete(anuncio.getId())) {
+						logger.info("anuncio con id: "+anuncio.getId()+" dado de baja");
+						JOptionPane.showMessageDialog(view, "Anuncio dado de baja correctamente");
+						AnuncioTableModel model = new AnuncioTableModel(anuncioService.findBy(view.getCriteria(), 
+								view.getCurrentPosition(), PaginatedSearchView.PAGE_SIZE).getPage());
+						view.setTableModel(model);
+						view.addButtonsColumn();
+					} else {
+						logger.error("error al dar de baja el anuncio con id: "+anuncio.getId());
+						JOptionPane.showMessageDialog(view,"Error al dar de baja el anuncio", "Error al eliminar", JOptionPane.ERROR_MESSAGE);
+					}
+				}				
 			}
 		}catch(DataException de) {
 			logger.error(de.getMessage(), de);

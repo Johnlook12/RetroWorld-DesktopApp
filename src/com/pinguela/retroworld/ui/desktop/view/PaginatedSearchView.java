@@ -47,24 +47,19 @@ public abstract class PaginatedSearchView<E> extends SearchView{
 		add(paginationPanel, BorderLayout.SOUTH);
 		
 		inicioBtn = new JButton();
-		inicioBtn.setEnabled(false);
 		paginationPanel.add(inicioBtn);
 		
 		anteriorBtn = new JButton();
-		anteriorBtn.setEnabled(false);
 		paginationPanel.add(anteriorBtn);
 		
 		paginationLbl = new JLabel("-");
 		paginationPanel.add(paginationLbl);
 		
 		siguienteBtn = new JButton();
-		siguienteBtn.setEnabled(false);
 		paginationPanel.add(siguienteBtn);
 		
 		finalBtn = new JButton();	
-		finalBtn.setEnabled(false);
 		paginationPanel.add(finalBtn);
-		
 	}
 	
 	public void updateView() {
@@ -94,18 +89,22 @@ public abstract class PaginatedSearchView<E> extends SearchView{
 	}
 
 	public void setStart(PagedSearchAction<E> start) {
-		this.inicioBtn.setAction(start);;
+		this.inicioBtn.setAction(start);
+		this.inicioBtn.setEnabled(false);
 	}
 
 	public void setPrevious(PagedSearchAction<E> previous) {
 		this.anteriorBtn.setAction(previous);
+		anteriorBtn.setEnabled(false);
 	}
 
 	public void setNext(PagedSearchAction<E> next) {
 		this.siguienteBtn.setAction(next);
+		siguienteBtn.setEnabled(false);
 	}
 
 	public void setEnd(PagedSearchAction<E> end) {
 		this.finalBtn.setAction(end);
+		finalBtn.setEnabled(false);
 	}
 }

@@ -3,7 +3,7 @@ package com.pinguela.retroworld.ui.desktop.controller;
 import javax.swing.Icon;
 import javax.swing.table.TableModel;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.AbstractCriteria;
 import com.pinguela.retroworld.model.Results;
 import com.pinguela.retroworld.model.Videojuego;

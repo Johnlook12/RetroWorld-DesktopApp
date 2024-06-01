@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -37,7 +38,7 @@ public class EmpleadoSearchView extends SearchView {
 	private JTable empleadoTableResults;
 	
 	//model
-	List<Empleado> results = null;
+	List<Empleado> empleados = null;
 	
 	public EmpleadoSearchView() {
 		setLayout(new BorderLayout(0, 0));
@@ -86,9 +87,6 @@ public class EmpleadoSearchView extends SearchView {
 			public void keyPressed(KeyEvent e) {
 				if(emailTextField.getText().length()>3) {
 					new SearchEmpleadoAction(view).actionPerformed(null);
-				} else {
-					setTableModel(getTableModel());
-					updateView();
 				}
 			}
 		});
@@ -130,12 +128,22 @@ public class EmpleadoSearchView extends SearchView {
 		return this.emailTextField.getText();
 	}
 	
-	public void setResults(List<Empleado> empleados) {
-		this.results=empleados;
+	public List<Empleado>getActiveEmpleados(){
+		return this.empleados;
 	}
 	
+	public void setEmpleados(List<Empleado> empleados) {
+		List<Empleado> activeEmpleados = new ArrayList<Empleado>();
+		for(Empleado e:empleados) {
+			if(e.getFechaBaja()==null) {
+				activeEmpleados.add(e);
+			}
+		}
+		this.empleados = activeEmpleados;
+	}
+	
+	
 	public void updateView() {
-		setTableModel(getTableModel());
 		addButtonsColumn();
 	}
 

@@ -8,7 +8,7 @@ import javax.swing.JDialog;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.Genero;
 import com.pinguela.retroworld.model.Idioma;
 import com.pinguela.retroworld.model.Plataforma;
@@ -58,7 +58,7 @@ public class OpenVideojuegoDetailAction extends BaseAction{
 		int filaSeleccionada = view.getTableResults().getSelectedRow();
 		Object selectedObject =view.getTableResults().getModel().getValueAt(filaSeleccionada, 0);
 		Videojuego videojuego = (Videojuego) selectedObject;
-		VideojuegoDetailView detailView = new VideojuegoDetailView(videojuego);
+		VideojuegoDetailView detailView = new VideojuegoDetailView(videojuego,view);
 		JDialog detailDialog = new RWDialog();
 		try {
 			List<Idioma>idiomas=idiomaService.findByVideojuego(videojuego.getId());

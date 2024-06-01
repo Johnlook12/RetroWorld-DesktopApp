@@ -1,6 +1,7 @@
 package com.pinguela.retroworld.ui.desktop.dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -25,13 +26,15 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.JTextComponent;
 
 import com.pinguela.retroworld.model.Desarrolladora;
 import com.pinguela.retroworld.model.Videojuego;
 import com.pinguela.retroworld.ui.desktop.controller.CreateVideojuegoAction;
-import com.pinguela.retroworld.ui.desktop.controller.AddVideojuegoImageAction;
 import com.pinguela.retroworld.ui.desktop.controller.SelectVideojuegoImageAction;
 import com.pinguela.retroworld.ui.desktop.renderer.DesarrolladoraListCellRenderer;
+import com.pinguela.retroworld.ui.desktop.utils.FormatUtils;
+import com.pinguela.retroworld.ui.desktop.utils.SwingUtils;
 import com.toedter.calendar.JDateChooser;
 
 public class CreateVideojuegoDialog extends RWDialog {
@@ -47,6 +50,7 @@ public class CreateVideojuegoDialog extends RWDialog {
 	private JTextArea descripcionTextArea;
 	private JComboBox desarrolladoraComboBox;
 	private JDateChooser fechaLanzamientoDateChooser;
+	private List<JTextComponent> textFields;
 
 	private Videojuego videojuego;
 	private List<Desarrolladora> desarrolladoras;
@@ -140,6 +144,7 @@ public class CreateVideojuegoDialog extends RWDialog {
 
 
 		fechaLanzamientoDateChooser = new JDateChooser();
+		fechaLanzamientoDateChooser.setDateFormatString("dd/MM/yyyy");
 		GridBagConstraints gbc_fechaLanzamientoDateChooser = new GridBagConstraints();
 		gbc_fechaLanzamientoDateChooser.insets = new Insets(0, 0, 0, 5);
 		gbc_fechaLanzamientoDateChooser.fill = GridBagConstraints.BOTH;
@@ -217,6 +222,7 @@ public class CreateVideojuegoDialog extends RWDialog {
 
 	private void postInitialize() {
 		videojuego = new Videojuego();
+		textFields = new ArrayList<JTextComponent>();
 		imageFileChooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
 				"JPG & PNG Images", "jpg", "png");
@@ -224,6 +230,11 @@ public class CreateVideojuegoDialog extends RWDialog {
 		imageFiles = new ArrayList<File>();
 		descripcionTextArea.setLineWrap(true);
 		descripcionTextArea.setWrapStyleWord(true);
+		FormatUtils.setTextMaxChars(nombreTextField, 80);
+		FormatUtils.setTextMaxChars(descripcionTextArea, 500);
+		textFields.add(nombreTextField);
+		textFields.add(descripcionTextArea);
+		SwingUtils.changeDateChooserColor(fechaLanzamientoDateChooser, Color.WHITE);
 	}
 
 
@@ -236,14 +247,25 @@ public class CreateVideojuegoDialog extends RWDialog {
 		return this.videojuego; 
 	}
 	
+	public boolean validarTextFields() {
+		for(JTextComponent field:textFields) {
+			if(field.getText().isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public void setVideojuego(Videojuego videojuego) {
 		this.videojuego=videojuego;
 	}
 
-	public void setModel() {
-		DefaultComboBoxModel<Desarrolladora> desarrolladoraModel = new DefaultComboBoxModel<Desarrolladora>(desarrolladoras.toArray(new Desarrolladora[desarrolladoras.size()]));
-		desarrolladoraComboBox.setModel(desarrolladoraModel);
-		desarrolladoraComboBox.setRenderer(new DesarrolladoraListCellRenderer());
+	public void setModel(DefaultComboBoxModel<Desarrolladora>model) {
+		desarrolladoraComboBox.setModel(model);
+	}
+	
+	public void setRenderer() {
+		desarrolladoraComboBox.setRenderer(new DesarrolladoraListCellRenderer());		
 	}
 
 	public void setDesarrolladoras(List<Desarrolladora> desarrolladoras) {

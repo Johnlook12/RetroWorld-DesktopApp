@@ -4,14 +4,8 @@ import javax.swing.Icon;
 import javax.swing.JDialog;
 
 import com.pinguela.retroworld.model.Anuncio;
-import com.pinguela.retroworld.service.GeneroService;
-import com.pinguela.retroworld.service.IdiomaService;
 import com.pinguela.retroworld.service.ImageService;
-import com.pinguela.retroworld.service.PlataformaService;
-import com.pinguela.retroworld.service.impl.GeneroServiceImpl;
-import com.pinguela.retroworld.service.impl.IdiomaServiceImpl;
 import com.pinguela.retroworld.service.impl.ImageServiceImpl;
-import com.pinguela.retroworld.service.impl.PlataformaServiceImpl;
 import com.pinguela.retroworld.ui.desktop.dialog.RWDialog;
 import com.pinguela.retroworld.ui.desktop.utils.SwingUtils;
 import com.pinguela.retroworld.ui.desktop.view.AnuncioDetailView;
@@ -19,20 +13,17 @@ import com.pinguela.retroworld.ui.desktop.view.PaginatedSearchView;
 
 public class OpenAnuncioDetailAction extends BaseAction{
 	
-	PaginatedSearchView view;
+	private PaginatedSearchView view;
 	
 	private ImageService imageService;	
 	
 	
 	public OpenAnuncioDetailAction(PaginatedSearchView view) {
-		this.view=view;
-		initServices();
+		this(view, null, null);
 	}
 	
 	public OpenAnuncioDetailAction(PaginatedSearchView view, String name) {
-		super(name);
-		this.view=view;
-		initServices();
+		this(view, name, null);
 	}
 	
 	public OpenAnuncioDetailAction(PaginatedSearchView view, String name, Icon icon) {
@@ -47,7 +38,7 @@ public class OpenAnuncioDetailAction extends BaseAction{
 		Object selectedObject =view.getTableResults().getModel().getValueAt(filaSeleccionada, 0);
 		JDialog detailDialog = new RWDialog();
 		Anuncio anuncio = (Anuncio) selectedObject;
-		AnuncioDetailView detailView = new AnuncioDetailView(anuncio);
+		AnuncioDetailView detailView = new AnuncioDetailView(anuncio,view);
 		detailView.setImages(imageService.getAnuncioImages(anuncio.getId()));
 		detailView.printImages();
 		detailDialog.getContentPane().add(detailView);

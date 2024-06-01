@@ -8,7 +8,7 @@ import com.pinguela.retroworld.model.Anuncio;
 //TODO: Con datos aquí en lista
 public class AnuncioTableModel extends DefaultTableModel{
 	
-	public static final String[] COLUMN_NAMES = {"Título", "Estado","Fecha Inicio", "Precio", "Detalle","Dar de baja"};
+	public static final String[] COLUMN_NAMES = {"Título", "Estado","Fecha Inicio","Fecha Fin", "Precio", "Detalle","Dar de baja"};
 	
 	public AnuncioTableModel(List<Anuncio> anuncios) {
 		super(COLUMN_NAMES, anuncios.size());

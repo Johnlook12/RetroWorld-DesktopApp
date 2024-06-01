@@ -1,15 +1,18 @@
 package com.pinguela.retroworld.ui.desktop.controller;
 
+import java.util.List;
+
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.Empleado;
 import com.pinguela.retroworld.service.EmpleadoService;
 import com.pinguela.retroworld.service.impl.EmpleadoServiceImpl;
+import com.pinguela.retroworld.ui.desktop.model.EmpleadoTableModel;
 import com.pinguela.retroworld.ui.desktop.view.EmpleadoSearchView;
 
 public class SoftDeleteEmpleadoAction extends BaseAction{
@@ -46,6 +49,11 @@ public class SoftDeleteEmpleadoAction extends BaseAction{
 				if(empleadoService.delete(empleado.getId())) {
 					logger.info("Empleado con id: "+empleado.getId()+" dado de baja");
 					JOptionPane.showMessageDialog(view, "Empleado dado de baja correctamente");
+					List<Empleado>empleados = empleadoService.findByAll();
+					view.setEmpleados(empleados);
+					EmpleadoTableModel model = new EmpleadoTableModel(view.getActiveEmpleados());
+					view.setTableModel(model);
+					
 				}else {
 					logger.error("error al dar de baja al empleado con id: "+empleado.getId());
 					JOptionPane.showMessageDialog(view, "No se pudo dar de baja el empleado", "Error al dar de baja", JOptionPane.ERROR_MESSAGE);

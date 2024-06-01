@@ -165,6 +165,11 @@ public class LoginView extends JPanel{
 		
 		postInitialize();
 	}
+
+	public void clearFields() {
+		emailTextField.setText("");
+		passwordField.setText("");
+	}
 	
 	public void setEmpleadoAutenticado(Empleado e) {
 		this.empleadoAutenticado = e;

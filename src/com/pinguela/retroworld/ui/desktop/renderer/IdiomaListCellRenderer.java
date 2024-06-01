@@ -23,14 +23,18 @@ public class IdiomaListCellRenderer extends DefaultListCellRenderer{
 		        boolean isSelected,
 		        boolean cellHasFocus) {
 		Idioma idioma = (Idioma) value;
-		if(list instanceof JList) {
-			if(isSelected) {
-				setBackground(Color.GRAY);
-			} else {
-				setBackground(list.getBackground());
+		if(idioma==null) {
+			setText("Seleccionar idioma");
+		}else {
+			if(list instanceof JList) {
+				if(isSelected) {
+					setBackground(Color.GRAY);
+				} else {
+					setBackground(list.getBackground());
+				}
 			}
+			super.setText("• "+idioma.getNombre());			
 		}
-		super.setText("• "+idioma.getNombre());
 		return this;
 	}
 }

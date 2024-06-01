@@ -26,6 +26,7 @@ public class LogOutAction extends AbstractAction{
 		RetroWorldWindow window = RetroWorldWindow.getInstance();
 		window.setEmpleadoAutenticado(null);
 		window.setVisible(false);
+		window.postLogOut();
 		window.showLoginView();
 	}
 

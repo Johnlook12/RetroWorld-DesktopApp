@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.Plataforma;
 import com.pinguela.retroworld.service.VideojuegoService;
 import com.pinguela.retroworld.service.impl.VideojuegoServiceImpl;

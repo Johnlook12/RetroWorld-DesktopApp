@@ -29,8 +29,7 @@ public class LoginAction extends AbstractAction{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		try {
-			Empleado empleado = empleadoService.autentificar("lucia.jimenez@email.com", "clave123");
-//			Empleado empleado = empleadoService.autentificar(view.getEmpleadoEmail(), view.getEmpleadoPassword());
+			Empleado empleado = empleadoService.autentificar(view.getEmpleadoEmail(), view.getEmpleadoPassword());
 			if(empleado!=null && empleado.getFechaBaja()==null) {
 				logger.info("Empleado con id "+empleado.getId()+" Autenticado correctamente");
 				
@@ -40,7 +39,7 @@ public class LoginAction extends AbstractAction{
 				new OpenEmpleadoProfileAction(window).doAction();
 				window.setVisible(true);
 				if(empleado.getIdTipoEmpleado() == Empleado.TIPO_ADMINISTRADOR) {
-					window.getEmpleadoMenu().setVisible(true);
+					window.setAdministradorFunctionsVisible(true);
 				}
 			} else {
 				JOptionPane.showMessageDialog(view.getParent(), "Usuario o contraseña incorrectos");

@@ -5,26 +5,20 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jasypt.util.password.StrongPasswordEncryptor;
 
-import com.pinguela.retroworld.dao.DataException;
 import com.pinguela.retroworld.model.Empleado;
-import com.pinguela.retroworld.service.EmpleadoService;
-import com.pinguela.retroworld.service.impl.EmpleadoServiceImpl;
 import com.pinguela.retroworld.ui.desktop.RetroWorldWindow;
 import com.pinguela.retroworld.ui.desktop.controller.ChangePasswordAction;
 

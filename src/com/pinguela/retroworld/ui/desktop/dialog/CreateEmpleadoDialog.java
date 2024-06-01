@@ -10,22 +10,26 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.JTextComponent;
 
 import com.pinguela.retroworld.model.Direccion;
 import com.pinguela.retroworld.model.Empleado;
 import com.pinguela.retroworld.ui.desktop.controller.CreateEmpleadoAction;
-import javax.swing.JScrollPane;
-import javax.swing.JPasswordField;
+import com.pinguela.retroworld.ui.desktop.utils.SwingUtils;
 
 public class CreateEmpleadoDialog extends RWDialog {
 
@@ -49,7 +53,7 @@ public class CreateEmpleadoDialog extends RWDialog {
 	private JScrollPane dataScrollPane;
 	private JPasswordField passwordField;
 	private JPasswordField repeatPasswordField;
-
+	private List<JTextComponent> textFields;
 	
 	public static void main(String[] args) {
 		try {
@@ -439,14 +443,38 @@ public class CreateEmpleadoDialog extends RWDialog {
 
 	
 	private void postInitialize() {
+		textFields = new ArrayList<JTextComponent>();
 		empleado = new Empleado();
 		direccion = new Direccion();
+		
+		textFields.add(apellido1TextField);
+		textFields.add(apellido2TextField);
+		textFields.add(dirViaTextField);
+		textFields.add(documentoTextField);
+		textFields.add(emailTextField);
+		textFields.add(letraTextField);
+		textFields.add(localidadTextField);
+		textFields.add(nombreTextField);
+		textFields.add(nombreViaTextField);
+		textFields.add(pisoTextField);
+		textFields.add(telefonoTextField);
+		textFields.add(tipoViaTextField);
+		
+	}
+	
+	public boolean validarTextFields() {
+		for(JTextComponent field:textFields) {
+			if(field.getText().isEmpty()) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public Empleado getEmpleado() {
 		empleado.setNombre(nombreTextField.getText());
 		empleado.setApellido1(apellido1TextField.getText());
-		empleado.setApellido2(apellido2TextField.getText());
+		empleado.setApellido2(SwingUtils.getTextFieldValueOrNull(apellido2TextField));
 		empleado.setDocumentoIdentidad(documentoTextField.getText());
 		empleado.setTelefono(telefonoTextField.getText());
 		empleado.setEmail(emailTextField.getText());
@@ -455,9 +483,9 @@ public class CreateEmpleadoDialog extends RWDialog {
 		
 		direccion.setCodigoPostal(Long.valueOf((Integer)codigoPostalSpinner.getValue()));
 		direccion.setDirVia(dirViaTextField.getText());
-		direccion.setLetra(letraTextField.getText());
-		direccion.setTipoVia(tipoViaTextField.getText());
-		direccion.setPiso(Integer.valueOf(pisoTextField.getText()));
+		direccion.setLetra(SwingUtils.getTextFieldValueOrNull(letraTextField));
+		direccion.setTipoVia(tipoViaTextField.getText().trim());
+		direccion.setPiso(SwingUtils.getIntegerValueOrNull(pisoTextField));
 		direccion.setNombreLocalidad(localidadTextField.getText());
 		direccion.setNombreVia(nombreViaTextField.getText());
 		

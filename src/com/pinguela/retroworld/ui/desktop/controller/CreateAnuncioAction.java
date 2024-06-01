@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.Anuncio;
 import com.pinguela.retroworld.service.AnuncioService;
 import com.pinguela.retroworld.service.impl.AnuncioServiceImpl;
@@ -39,11 +39,15 @@ public class CreateAnuncioAction extends BaseAction{
 	public void doAction() {
 		try {
 			Anuncio anuncio=dialog.getAnuncio();
-			anuncioService.create(anuncio);
-			logger.info("Anuncio con id: "+anuncio.getId()+" creado");
-			JOptionPane.showMessageDialog(dialog, "Anuncio creado correctamente");
-			dialog.setVisible(false);
-			new AddAnuncioImageAction(dialog).doAction();
+			if(dialog.validarTextFields()) {
+				anuncioService.create(anuncio);
+				logger.info("Anuncio con id: "+anuncio.getId()+" creado");
+				JOptionPane.showMessageDialog(dialog, "Anuncio creado correctamente");
+				dialog.setVisible(false);
+				new AddAnuncioImageAction(dialog).doAction();
+			} else {
+				JOptionPane.showMessageDialog(dialog, "Faltan campos por rellenar", "Error al crear anuncio", JOptionPane.ERROR_MESSAGE);
+			}
 		}catch(DataException de) {
 			logger.error(de.getMessage(), de);
 		}

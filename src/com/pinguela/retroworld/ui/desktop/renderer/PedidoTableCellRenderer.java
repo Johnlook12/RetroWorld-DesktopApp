@@ -22,7 +22,7 @@ public class PedidoTableCellRenderer extends DefaultTableCellRenderer{
 		} if(column==1) {
 			setText(pedido.getFecha().toString());
 		} if(column==2) {
-			setText(pedido.getNombreUsuario());
+			setText(pedido.getNickNameUsuario());
 		} if(column==3) {
 			setText(pedido.getEstado());
 		} if(column==4) {

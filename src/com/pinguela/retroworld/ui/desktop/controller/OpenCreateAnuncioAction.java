@@ -10,7 +10,7 @@ import javax.swing.Icon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.EstadoVideojuego;
 import com.pinguela.retroworld.model.Results;
 import com.pinguela.retroworld.model.Videojuego;
@@ -60,6 +60,7 @@ public class OpenCreateAnuncioAction extends BaseAction{
 					estados.toArray(new EstadoVideojuego[estados.size()]));
 			DefaultComboBoxModel<Videojuego>videojuegoModel = new DefaultComboBoxModel<Videojuego>(videojuegos.getPage()
 					.toArray(new Videojuego[videojuegos.getPage().size()]));
+			dialog.setModal(true);
 			dialog.setVideojuegos(videojuegos);
 			dialog.setModel(videojuegoModel, estadoModel);
 			dialog.setRenderer();

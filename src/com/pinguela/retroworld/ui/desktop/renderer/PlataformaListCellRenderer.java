@@ -22,14 +22,18 @@ public class PlataformaListCellRenderer extends DefaultListCellRenderer{
 		        boolean isSelected,
 		        boolean cellHasFocus) {
 		Plataforma plataforma = (Plataforma) value;
-		if(list instanceof JList) {
-			if(isSelected) {
-				setBackground(Color.GRAY);
-			} else {
-				setBackground(list.getBackground());
+		if(plataforma==null) {
+			setText("Seleccionar plataforma");
+		}else {
+			if(list instanceof JList) {
+				if(isSelected) {
+					setBackground(Color.GRAY);
+				} else {
+					setBackground(list.getBackground());
+				}
 			}
+			super.setText("• "+plataforma.getNombre());			
 		}
-		super.setText("• "+plataforma.getNombre());
 		return this;
 	}
 }

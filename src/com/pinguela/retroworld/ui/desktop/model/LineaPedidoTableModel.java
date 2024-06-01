@@ -8,7 +8,7 @@ import com.pinguela.retroworld.model.LineaPedido;
 
 public class LineaPedidoTableModel extends DefaultTableModel{
 
-public static final String[] COLUMN_NAMES = {"ID","NOMBRE","PRECIO"};
+public static final String[] COLUMN_NAMES = {"ID","VIDEOJUEGO","PRECIO"};
 	
 	public LineaPedidoTableModel(List<LineaPedido>lineas) {
 		super(COLUMN_NAMES, lineas.size());

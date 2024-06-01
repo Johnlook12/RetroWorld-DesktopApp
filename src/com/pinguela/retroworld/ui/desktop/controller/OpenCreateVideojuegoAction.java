@@ -1,17 +1,16 @@
-package com.pinguela.retroworld.ui.desktop.controller;
+	package com.pinguela.retroworld.ui.desktop.controller;
 
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import javax.swing.AbstractAction;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.pinguela.retroworld.dao.DataException;
+import com.pinguela.DataException;
 import com.pinguela.retroworld.model.Desarrolladora;
 import com.pinguela.retroworld.service.DesarrolladoraService;
 import com.pinguela.retroworld.service.impl.DesarrolladoraServiceImpl;
@@ -50,7 +49,10 @@ public class OpenCreateVideojuegoAction extends BaseAction{
 			});
 			List<Desarrolladora> desarrolladoras = desarrolladoraService.findByAll();
 			dialog.setDesarrolladoras(desarrolladoras);
-			dialog.setModel();
+			DefaultComboBoxModel<Desarrolladora> desarrolladoraModel = new DefaultComboBoxModel<Desarrolladora>(desarrolladoras.toArray(new Desarrolladora[desarrolladoras.size()]));
+			dialog.setModal(true);
+			dialog.setModel(desarrolladoraModel);
+			dialog.setRenderer();
 			dialog.setVisible(true);			
 		}catch(DataException de) {
 			logger.error(de.getMessage(), de);

@@ -21,13 +21,17 @@ public class GeneroListCellRenderer extends DefaultListCellRenderer {
 		        boolean isSelected,
 		        boolean cellHasFocus) {
 		Genero genero = (Genero) value;
-		super.setText("• "+genero.getNombre());
-		if(list instanceof JList) {
-			if(isSelected) {
-				setBackground(Color.GRAY);
-			} else {
-				setBackground(list.getBackground());
-			}
+		if(genero==null) {
+			setText("Seleccionar genero");
+		}else {
+			super.setText("• "+genero.getNombre());
+			if(list instanceof JList) {
+				if(isSelected) {
+					setBackground(Color.GRAY);
+				} else {
+					setBackground(list.getBackground());
+				}
+			}			
 		}
 		return this;
 	}
