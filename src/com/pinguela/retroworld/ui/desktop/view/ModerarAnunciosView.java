@@ -25,7 +25,15 @@ import com.pinguela.retroworld.ui.desktop.controller.RechazarAnuncioAction;
 import com.pinguela.retroworld.ui.desktop.model.ModerarAnunciosTableModel;
 import com.pinguela.retroworld.ui.desktop.renderer.ButtonColumn;
 import com.pinguela.retroworld.ui.desktop.renderer.ModerarAnuncioTableCellRenderer;
+import com.pinguela.retroworld.ui.desktop.utils.SwingUtils;
 import com.toedter.calendar.JDateChooser;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import javax.swing.JButton;
 
 public class ModerarAnunciosView extends PaginatedSearchView<Anuncio> {
 
@@ -39,9 +47,9 @@ public class ModerarAnunciosView extends PaginatedSearchView<Anuncio> {
 	
 	public ModerarAnunciosView() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{19, 97, 32, 96, 62, 88, 62, 0, 0};
+		gridBagLayout.columnWidths = new int[]{19, 97, 32, 96, 62, 88, 62, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 20, 20, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE, 0.0};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		getSearchFieldPanel().setLayout(gridBagLayout);
 		
@@ -63,6 +71,7 @@ public class ModerarAnunciosView extends PaginatedSearchView<Anuncio> {
 		getSearchFieldPanel().add(idAnuncioLbl, gbc_idAnuncioLbl);
 		
 		idAnuncioSpinner = new JSpinner();
+		idAnuncioSpinner.addChangeListener(new ModerarAnuncioPagedSearchAction(PagedSearchAction.START, this));
 		GridBagConstraints gbc_idAnuncioSpinner = new GridBagConstraints();
 		gbc_idAnuncioSpinner.fill = GridBagConstraints.HORIZONTAL;
 		gbc_idAnuncioSpinner.anchor = GridBagConstraints.NORTH;
@@ -99,6 +108,14 @@ public class ModerarAnunciosView extends PaginatedSearchView<Anuncio> {
 		getSearchFieldPanel().add(fechaInicioLbl, gbc_fechaInicioLbl);
 		
 		fechaInicioDateChooser = new JDateChooser();
+		ModerarAnunciosView view = this;
+		fechaInicioDateChooser.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				if("date".equalsIgnoreCase(evt.getPropertyName())) {
+					new ModerarAnuncioPagedSearchAction(PagedSearchAction.START, view).doAction();
+				}
+			}
+		});
 		fechaInicioDateChooser.getCalendarButton().setForeground(Color.BLACK);
 		fechaInicioDateChooser.getCalendarButton().setBackground(UIManager.getColor("Button.background"));
 		fechaInicioDateChooser.setDateFormatString("dd/MM/yyyy");
@@ -118,15 +135,24 @@ public class ModerarAnunciosView extends PaginatedSearchView<Anuncio> {
 		getSearchFieldPanel().add(videojuegoLbl, gbc_videojuegoLbl);
 		
 		videojuegoTextField = new JTextField();
+		videojuegoTextField.addKeyListener(new ModerarAnuncioPagedSearchAction(PagedSearchAction.START, this));
 		videojuegoTextField.setColumns(10);
 		GridBagConstraints gbc_videojuegoTextField = new GridBagConstraints();
 		gbc_videojuegoTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_videojuegoTextField.insets = new Insets(0, 0, 5, 0);
+		gbc_videojuegoTextField.insets = new Insets(0, 0, 5, 5);
 		gbc_videojuegoTextField.anchor = GridBagConstraints.NORTH;
 		gbc_videojuegoTextField.gridwidth = 2;
 		gbc_videojuegoTextField.gridx = 7;
 		gbc_videojuegoTextField.gridy = 2;
 		getSearchFieldPanel().add(videojuegoTextField, gbc_videojuegoTextField);
+		
+		JButton buscarButton = new JButton("");
+		buscarButton.setAction(new ModerarAnuncioPagedSearchAction(PagedSearchAction.START, this, "Buscar"));
+		GridBagConstraints gbc_buscarButton = new GridBagConstraints();
+		gbc_buscarButton.insets = new Insets(0, 0, 5, 0);
+		gbc_buscarButton.gridx = 9;
+		gbc_buscarButton.gridy = 2;
+		getSearchFieldPanel().add(buscarButton, gbc_buscarButton);
 		
 		postInitialize();
 	}
@@ -136,6 +162,7 @@ public class ModerarAnunciosView extends PaginatedSearchView<Anuncio> {
 		getTableResults().setDefaultRenderer(Object.class, new ModerarAnuncioTableCellRenderer());
 		SpinnerNumberModel model = new SpinnerNumberModel(0,0, Integer.MAX_VALUE, 1);
 		idAnuncioSpinner.setModel(model);
+		SwingUtils.changeDateChooserColor(fechaInicioDateChooser, Color.WHITE);
 	}
 	
 	
