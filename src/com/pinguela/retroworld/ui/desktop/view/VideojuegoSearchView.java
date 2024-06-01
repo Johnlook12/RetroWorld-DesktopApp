@@ -222,6 +222,7 @@ public class VideojuegoSearchView extends PaginatedSearchView<Videojuego> {
 	@Override
 	public VideojuegoCriteria getCriteria() {
 		VideojuegoCriteria criteria= new VideojuegoCriteria();
+		criteria.setNombre(nameTextField.getText());
 		criteria.setFechaLanzamientoDesde(fechaLanzamientoDesdeDateChooser.getDate());
 		criteria.setFechaLanzamientoHasta(fechaLanzamientoHastaDateChooser.getDate());
 		Idioma i = (Idioma) idiomaComboBox.getSelectedItem();
