@@ -40,6 +40,8 @@ public class LoginAction extends AbstractAction{
 				window.setVisible(true);
 				if(empleado.getIdTipoEmpleado() == Empleado.TIPO_ADMINISTRADOR) {
 					window.setAdministradorFunctionsVisible(true);
+				} else {
+					window.setAdministradorFunctionsVisible(false);
 				}
 			} else {
 				JOptionPane.showMessageDialog(view.getParent(), "Usuario o contraseña incorrectos");
