@@ -138,6 +138,7 @@ public class PedidoSearchView extends SearchView {
 	private void postInitialize() {
 		idButtonGroup = new ButtonGroup();
 		estadoAnuncioButtonGroup = new ButtonGroup();
+		cerradosTableResults.setDefaultEditor(Object.class, null);
 		getTableResults().setDefaultRenderer(Object.class, new PedidoTableCellRenderer());
 		cerradosTableResults.setDefaultRenderer(Object.class, new PedidoTableCellRenderer());
 		FormatUtils.setOnlyDigitsDocument(idValueTextField);

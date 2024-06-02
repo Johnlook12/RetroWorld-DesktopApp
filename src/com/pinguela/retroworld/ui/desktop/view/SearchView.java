@@ -31,6 +31,8 @@ public abstract class SearchView extends View{
 		tableResults = new JTable();
 		resultsScrollPane.setViewportView(tableResults);
 		
+		tableResults.setDefaultEditor(Object.class, null);
+		
 	}
 	
 	public JTable getTableResults() {
